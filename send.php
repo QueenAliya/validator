@@ -2,12 +2,18 @@
 require 'session.php';
 require 'key.php';
 
-$link = empty($_POST['link'])? null : $_POST['link'];
-echo $key;
-if (!empty($link)) {    
-    $user_url = $link;
-    $Ps_ApiDesktop = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $user_url . '&key=' .$key;
-    $Ps_ApiMobile = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $user_url . '&strategy=mobile&key=' . $key;
+$inputUrl = empty($_POST['link'])? null : $_POST['link'];
+$cleanedUrl = getCleanedUrl($inputUrl);
+function getCleanedUrl($url) {
+    $parsedUrl = parse_url($url);
+    $cleanedUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'];
+    return $cleanedUrl;
+}
+
+
+if (!empty($cleanedUrl)) {    
+    $Ps_ApiDesktop = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $cleanedUrl . '&key=' .$key;
+    $Ps_ApiMobile = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $cleanedUrl . '&strategy=mobile&key=' . $key;
     $Ps_CurlDesktop = curl_init();
     $Ps_CurlMobile = curl_init();
 
@@ -73,7 +79,7 @@ if (!empty($link)) {
     }
     $array_merged = ['time' => $data, 'desktop' => $combinedData_desktop, 'mobile' => $combinedData_mobile];
     
-    $url_v3 = 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($user_url);
+    $url_v3 = 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($cleanedUrl);
     $curl_v3 = curl_init();
     curl_setopt($curl_v3, CURLOPT_URL, $url_v3);
     curl_setopt($curl_v3, CURLOPT_RETURNTRANSFER, true);

@@ -20,7 +20,7 @@ require 'session.php';
     </style>
 </head>
 <body>
-    <form id="form" method="POST">
+    <form id="form" method="POST" action="send.php">
         <input type="text" name="link" id="link">
         <button type="submit">Отправить</button>
     </form> 
@@ -70,10 +70,10 @@ require 'session.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    // function submit(e){
-    //     e.preventDefault();
-    //     console.log('clicked');
-    // }
+    function submit(e){
+        e.preventDefault();
+        console.log('clicked');
+    }
     $(document).ready(function() {
         $("#form").submit(function (e) {
         e.preventDefault();
