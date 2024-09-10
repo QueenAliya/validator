@@ -31,12 +31,13 @@ require 'session.php';
         if ($data) {
             echo 'id - ' . $data['data']['id'] . '<br>';
             echo 'time - ' . $data['data']['time'] . '<br>';
-            echo 'first-contentful-paint - ' . $data['pagespeed_desktop']['first-contentful-paint'] . '<br>';
-            echo 'largest-contentful-paint - ' . $data['pagespeed_desktop']['largest-contentful-paint'] . '<br>';
-            echo 'total-blocking-time - ' . $data['pagespeed_desktop']['total-blocking-time'] . '<br>';
-            echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop']['cumulative-layout-shift'] . '<br>';
-            echo 'server-response-time - ' . $data['pagespeed_desktop']['server-response-time'] . '<br>';
-            echo 'speed-index - ' . $data['pagespeed_desktop']['speed-index'] . '<br>';
+            echo 'performance - ' . $data['pagespeed_desktop_2']['first-performance'] . '<br>';
+            echo 'first-contentful-paint - ' . $data['pagespeed_desktop_2']['first-contentful-paint'] . '<br>';
+            echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_2']['largest-contentful-paint'] . '<br>';
+            echo 'total-blocking-time - ' . $data['pagespeed_desktop_2']['total-blocking-time'] . '<br>';
+            echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_2']['cumulative-layout-shift'] . '<br>';
+            echo 'server-response-time - ' . $data['pagespeed_desktop_2']['server-response-time'] . '<br>';
+            echo 'speed-index - ' . $data['pagespeed_desktop_2']['speed-index'] . '<br>';
             // foreach ($data['w3c_validator']['messages'] as $message) {
             //     echo "Info: {$message['message']}<br><br>";
             //     echo "From line {$message['lastLine']}, column {$message['firstColumn']}; to line {$message['lastLine']}, column {$message['lastColumn']}<br><br>";
@@ -46,6 +47,9 @@ require 'session.php';
             echo 'Отправьте сайт на проверку';
         }
         
+        function roundToSec($number){
+            return round(($number/1000), 1);
+        }
     ?>
     </div>
 
@@ -143,7 +147,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_desktop']['largest-contentful-paint']?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_1']['LARGEST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -221,7 +225,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">537
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_mobile_1']['INTERACTION_TO_NEXT_PAINT']?>
                                                     мс</span>
                                             </span>
                                         </span>
@@ -298,7 +302,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green">0</span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_mobile_1']['CUMULATIVE_LAYOUT_SHIFT_SCORE']?></span>
                                             </span>
                                         </span>
                                     </div>
@@ -377,7 +381,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">3,1
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_1']['FIRST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -455,13 +459,19 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item grey">-</span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item grey"><?=$data['pagespeed_mobile_1']['FIRST_INPUT_DELAY_MS']?> мс</span>
                                             </span>
                                         </span>
                                     </div>
                                     <div class="site-perfomance-block-info-line-block">
                                         <span style="flex-grow: 5.3170; padding-right: 2px;">
-                                            <div style="height: 5px; width: 100%;" class="line-grey"></div>
+                                            <div style="height: 5px; width: 100%;" class="line-green"></div>
+                                        </span>
+                                        <span style="flex-grow: 0.3070; padding-right: 2px;">
+                                            <div style="height: 5px; width: 100%;" class="line-orange"></div>
+                                        </span>
+                                        <span style="flex-grow: 0.2244;">
+                                            <div style="height: 5px; width: 100%;" class="line-red"></div>
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
@@ -518,7 +528,7 @@ require 'session.php';
                                         <rect x="0.861328" y="0.517456" width="6.27817" height="6.27817"
                                             fill="#FFA400" />
                                     </svg>
-                                    <a href="javascript:void(0);">Cumulative Layout Shift (CLS)</a>
+                                    <a href="javascript:void(0);">Time to First Byte (TTFB)</a>
                                 </div>
                                 <div class="site-perfomance-block-info-line">
                                     <div class="site-perfomance-block-info-line-text">
@@ -526,7 +536,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow">1,3
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow"><?=roundToSec($data['pagespeed_mobile_1']['EXPERIMENTAL_TIME_TO_FIRST_BYTE'])?>
                                                     сек.</span>
                                             </span>
                                         </span>

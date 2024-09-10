@@ -3,12 +3,6 @@ require 'session.php';
 require 'key.php';
 
 $inputUrl = empty($_POST['link'])? null : $_POST['link'];
-// $cleanedUrl = getCleanedUrl($inputUrl);
-// function getCleanedUrl($url) {
-//     $parsedUrl = parse_url($url);
-//     $cleanedUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'];
-//     return $cleanedUrl;
-// }
 Class ApiFetcher{
     private $key;
     private $url;
@@ -90,7 +84,6 @@ Class ApiFetcher{
         
         return $generalArray;
     }
-
 
     private function fetchDataPagespeed($url) {
         $ch = curl_init();
