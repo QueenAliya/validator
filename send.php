@@ -3,109 +3,131 @@ require 'session.php';
 require 'key.php';
 
 $inputUrl = empty($_POST['link'])? null : $_POST['link'];
-$cleanedUrl = getCleanedUrl($inputUrl);
-function getCleanedUrl($url) {
-    $parsedUrl = parse_url($url);
-    $cleanedUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'];
-    return $cleanedUrl;
+// $cleanedUrl = getCleanedUrl($inputUrl);
+// function getCleanedUrl($url) {
+//     $parsedUrl = parse_url($url);
+//     $cleanedUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'];
+//     return $cleanedUrl;
+// }
+Class ApiFetcher{
+    private $key;
+    private $url;
+
+    public function __construct($key, $url) {
+        $this->key = $key;
+        $this->url = $url;
+    }
+    
+    public function getData() {
+        $data = [];
+        // API для десктопа
+        $desktopUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key;
+        $rawArray = $this->fetchDataPagespeed($desktopUrl);
+        $data['data']['id'] = $rawArray['id'];
+        $time = $rawArray['analysisUTCTimestamp'];
+        $data['data']['time'] = substr($time, 0, 16);
+        $data['pagespeed_desktop_1'] = $this->getActualPerfomance($rawArray);
+        $data['pagespeed_desktop_2'] = $this->getPerfomance($rawArray);
+
+        // API для мобилки
+        $mobileUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key;
+        $rawArray = $this->fetchDataPagespeed($mobileUrl);
+        $data['pagespeed_mobile_1'] = $this->getActualPerfomance($rawArray);
+        $data['pagespeed_mobile_2'] = $this->getPerfomance($rawArray);
+
+        // валидатор W3C
+        $validatorUrl = 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($this->url);
+        $data['w3c_validator'] = $this->fetchDataW3($validatorUrl);
+
+        return $data;
+    }
+
+    private function getActualPerfomance($array) {
+        $loadingExperience = $array['loadingExperience']; 
+        $metrics = $loadingExperience['metrics'];
+        $generalArray = [];
+        $arrayKeys = [
+            'LARGEST_CONTENTFUL_PAINT_MS', 
+            'INTERACTION_TO_NEXT_PAINT',
+            'CUMULATIVE_LAYOUT_SHIFT_SCORE', 
+            'FIRST_CONTENTFUL_PAINT_MS', 
+            'FIRST_INPUT_DELAY_MS',
+            'EXPERIMENTAL_TIME_TO_FIRST_BYTE'
+        ];
+        
+        foreach ($arrayKeys as $key) {
+            if(isset($metrics[$key])) {
+                $generalArray[$key] = $metrics[$key]['percentile'];
+            }
+            else{
+                $generalArray[$key] = 'no percentile';
+            }
+        }
+        return $generalArray;
+    }
+    private function getPerfomance($array) {
+        $lighthouseResult = $array['lighthouseResult']; 
+        $performance = $lighthouseResult['categories']['performance']['score']; 
+        $audits = $lighthouseResult['audits'];
+        $generalArray = [];
+        $arrayKeys = [
+            'first-contentful-paint', 
+            'largest-contentful-paint',
+            'total-blocking-time', 
+            'cumulative-layout-shift', 
+            'speed-index',
+            'server-response-time'
+        ];
+        foreach ($arrayKeys as $key) {
+            if(isset($audits[$key])) {
+                $generalArray[$key] = $audits[$key]['numericValue'];
+            }
+            else{
+                $generalArray[$key] = 'no numericValue';
+            }
+        }
+        $generalArray['performance'] =  $performance;
+        
+        return $generalArray;
+    }
+
+
+    private function fetchDataPagespeed($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        if($response === false){
+            $error = 'Ошибка cURL: ' . curl_error($ch);
+            return ['error' => $error];
+        }
+        curl_close($ch);
+        
+        return json_decode($response, true);
+    }
+    private function fetchDataW3($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36'));
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        return json_decode($response, true);
+    }
+
+    public function saveDataToFile($data, $filename) {
+        file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+    }
 }
+if ($inputUrl) {
+    $cleanedUrl = filter_var($inputUrl, FILTER_SANITIZE_URL);
 
-
-if (!empty($cleanedUrl)) {    
-    $Ps_ApiDesktop = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $cleanedUrl . '&key=' .$key;
-    $Ps_ApiMobile = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . $cleanedUrl . '&strategy=mobile&key=' . $key;
-    $Ps_CurlDesktop = curl_init();
-    $Ps_CurlMobile = curl_init();
-
-    curl_setopt($Ps_CurlDesktop, CURLOPT_URL, $Ps_ApiDesktop);
-    curl_setopt($Ps_CurlDesktop, CURLOPT_RETURNTRANSFER, true);
-
-    curl_setopt($Ps_CurlMobile, CURLOPT_URL, $Ps_ApiMobile);
-    curl_setopt($Ps_CurlMobile, CURLOPT_RETURNTRANSFER, true);
-
-    $Ps_ResponseDesktop = curl_exec($Ps_CurlDesktop);
-    $Ps_ResponseMobile = curl_exec($Ps_CurlMobile);
-
-    if($Ps_ResponseDesktop === false){
-        $errorDesktop = 'Ошибка cURL: ' . curl_error($Ps_CurlDesktop);
-    }
-    if($Ps_ResponseMobile === false){
-        $errorMobile = 'Ошибка cURL: ' . curl_error($Ps_CurlMobile);
-    }
-    if($errorDesktop || $errorMobile){
-        $errors = $errorDesktop . $errorMobile;
-    }
-    curl_close($Ps_CurlDesktop);
-    curl_close($Ps_CurlMobile);
-    
-    $json_ps_desktop = json_decode($Ps_ResponseDesktop, true);
-    $json_ps_mobile = json_decode($Ps_ResponseMobile, true);
-    
-    $lighthouseResult_desktop = $json_ps_desktop['lighthouseResult']; 
-    $audits_desktop = $lighthouseResult_desktop['audits'];
-    
-    
-    $lighthouseResult_mobile = $json_ps_mobile['lighthouseResult']; 
-    $audits_mobile = $lighthouseResult_mobile['audits'];
-    
-    $id =  $json_ps_desktop['id'];
-    $time =  $json_ps_desktop['analysisUTCTimestamp'];
-    $time =  substr($time, 0, 16);
-    
-    $data = [ 'id' => $id, 'time' => $time ];
-
-   
-
-    
-
-    $links = ['total-blocking-time', 'largest-contentful-paint', 'cumulative-layout-shift', 'first-contentful-paint', 'first-input-delay', 'server-response-time', 'speed-index', 'time-to-interactive', 'first-meaningful-paint', 'first-cpu-idle', 'estimated-input-latency'];
-    $combinedData_desktop = [];
-    foreach ($links as $link) {
-        if(isset($audits_desktop[$link])) {
-            $combinedData_desktop[$link] = $audits_desktop[$link]['displayValue'];
-        }
-        else{
-            $combinedData_desktop[$link] = 'no data desktop1';
-        }
-    }
-    $combinedData_mobile = [];
-    foreach ($links as $link) {
-        if(isset($audits_mobile[$link])) {
-            $combinedData_mobile[$link] = $audits_mobile[$link]['displayValue'];
-        }
-        else {
-            $combinedData_mobile[$link] = 'no data - mobile';
-        }
-    }
-    $array_merged = ['time' => $data, 'desktop' => $combinedData_desktop, 'mobile' => $combinedData_mobile];
-    
-    $url_v3 = 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($cleanedUrl);
-    $curl_v3 = curl_init();
-    curl_setopt($curl_v3, CURLOPT_URL, $url_v3);
-    curl_setopt($curl_v3, CURLOPT_RETURNTRANSFER, true);
-
-    //следовать за перенаправлениями
-    curl_setopt($curl_v3, CURLOPT_FOLLOWLOCATION, true);
-    // заголовок User-Agent
-    curl_setopt($curl_v3, CURLOPT_HTTPHEADER, array('User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36'));
-
-    $response_v3 = curl_exec($curl_v3);
-    if($response_v3 === false){
-        echo 'Ошибка cURL: ' . curl_error($curl_v3);
-    }
-    curl_close($curl_v3);
-    $response_v3 = mb_convert_encoding($response_v3, 'UTF-8', 'UTF-8');
-    $json_response_v3 = json_decode($response_v3, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        $json_response_v3 = json_last_error_msg();
-    }
-
-    $mergedData = array_merge($array_merged, $json_response_v3);
-    
+    $apiFetcher = new ApiFetcher($key, $cleanedUrl);
+    $data = $apiFetcher->getData();
     
     $ses_id = session_id();
-    file_put_contents('responses/' . $ses_id . '.json', json_encode($mergedData, JSON_PRETTY_PRINT));
-    // file_put_contents('responses/errors.txt', $errors);
-
-    exit();
+    $apiFetcher->saveDataToFile($data, 'responses/' . $ses_id . '.json');
 }
+

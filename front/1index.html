@@ -1,77 +1,27 @@
-<?
-require 'session.php';
-?>
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/front/style.css">
-    <title>Validator_VBI</title>
-    <style>
-        .response{
-            width: 100%;
-            height: 100%;
-            background-color: #E0FFFF;
-            color: black;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-    <div class="response">
-    <?php
-        $ses_id = session_id();
-        $json_response_file = 'responses/' . $ses_id. '.json';
-        $data = '';
-
-        if(file_exists($json_response_file)) {
-            $json_response = file_get_contents($json_response_file); 
-            $data = json_decode($json_response, true);
-        }
-        if ($data) {
-            echo 'id - ' . $data['data']['id'] . '<br>';
-            echo 'time - ' . $data['data']['time'] . '<br>';
-            echo 'first-contentful-paint - ' . $data['pagespeed_desktop']['first-contentful-paint'] . '<br>';
-            echo 'largest-contentful-paint - ' . $data['pagespeed_desktop']['largest-contentful-paint'] . '<br>';
-            echo 'total-blocking-time - ' . $data['pagespeed_desktop']['total-blocking-time'] . '<br>';
-            echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop']['cumulative-layout-shift'] . '<br>';
-            echo 'server-response-time - ' . $data['pagespeed_desktop']['server-response-time'] . '<br>';
-            echo 'speed-index - ' . $data['pagespeed_desktop']['speed-index'] . '<br>';
-            // foreach ($data['w3c_validator']['messages'] as $message) {
-            //     echo "Info: {$message['message']}<br><br>";
-            //     echo "From line {$message['lastLine']}, column {$message['firstColumn']}; to line {$message['lastLine']}, column {$message['lastColumn']}<br><br>";
-            //     echo "Extract: " . htmlspecialchars($message['extract']) . "<br><br>";
-            // }
-        } else {
-            echo 'Отправьте сайт на проверку';
-        }
-        
-    ?>
-    </div>
-
-
-
     <section class="reports-top">
         <div class="container">
-            <form id="form" method="POST" action="send.php">
-            <input type="text" name="link" id="link" placeholder="введите url" required>
-            <button type="submit">Отправить</button>
-            </form> 
-            <div id="error"></div>
-
             <div class="reports-top-main">
                 <h1>Отчёт о производительности сайта</h1>
                 <div class="reports-top-wrap">
                     <div class="reports-top-block">
                         <p>Сайт:</p>
                         <div class="reports-top-block-btn">
-                            <a href="<?=$data['data']['id'] ?>" target="_blank"><?=$data['data']['id'] ?></a>
+                            <a href="https://vbi.ru/">https://vbi.ru/</a>
                         </div>
                     </div>
                     <div class="reports-top-block">
                         <p>Дата:</p>
                         <div class="reports-top-block-btn">
-                            <p><?= date("d.m.Y", strtotime($data['data']['time']));?></p>
+                            <p>06.08.2024</p>
                         </div>
                     </div>
                 </div>
@@ -143,7 +93,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_desktop']['largest-contentful-paint']?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">5,2
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -160,7 +110,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS">
-                                        <img src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;">
+                                        <img src="./pic/red-svg.svg" style="width: 16px; height: 16px;">
                                     </span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
@@ -238,7 +188,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -314,7 +264,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/green-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/green-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -394,7 +344,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -465,7 +415,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/grey-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/grey-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -543,7 +493,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/yellow-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/yellow-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -723,7 +673,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS">
-                                        <img src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;">
+                                        <img src="./pic/red-svg.svg" style="width: 16px; height: 16px;">
                                     </span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
@@ -801,7 +751,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -877,7 +827,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/green-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/green-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -957,7 +907,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/red-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -1028,7 +978,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/grey-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/grey-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -1106,7 +1056,7 @@ require 'session.php';
                                         </span>
                                     </div>
                                     <span class="site-perfomance-block-info-line-text-block GQ6RS"><img
-                                            src="./front/pic/yellow-svg.svg" style="width: 16px; height: 16px;"></span>
+                                            src="./pic/yellow-svg.svg" style="width: 16px; height: 16px;"></span>
                                     <div class="site-perfomance-block-info-line-block-hidden">
                                         <p class="site-perfomance-block-info-line-block-hidden-text">Загрузка страниц
                                         </p>
@@ -1350,7 +1300,7 @@ require 'session.php';
                     <div class="performance-info-block-top-border"></div>
                     <div class="performance-info-block-top-right">
                         <div class="performance-info-block-top-right-img">
-                            <img src="./front/pic/image22.png">
+                            <img src="./pic/image22.png">
                         </div>
                     </div>
                 </div>
@@ -1534,14 +1484,14 @@ require 'session.php';
                 </div>
                 <div class="performance-info-block-photo-wrap">
                     <div class="performance-info-block-photo-block">
-                        <img src="./front/pic/image1.png" alt="">
-                        <img src="./front/pic/image2.png" alt="">
-                        <img src="./front/pic/image3.png" alt="">
-                        <img src="./front/pic/image4.png" alt="">
-                        <img src="./front/pic/image4.png" alt="">
-                        <img src="./front/pic/image4.png" alt="">
-                        <img src="./front/pic/image4.png" alt="">
-                        <img src="./front/pic/image4.png" alt="">
+                        <img src="./pic/image1.png" alt="">
+                        <img src="./pic/image2.png" alt="">
+                        <img src="./pic/image3.png" alt="">
+                        <img src="./pic/image4.png" alt="">
+                        <img src="./pic/image4.png" alt="">
+                        <img src="./pic/image4.png" alt="">
+                        <img src="./pic/image4.png" alt="">
+                        <img src="./pic/image4.png" alt="">
                     </div>
                     <div class="performance-info-block-tabs-block">
                         <p class="performance-info-block-tabs-block-text">Показать аудиты</p>
@@ -1589,7 +1539,7 @@ require 'session.php';
                                             <p class="performance-info-block-tabs-hidden-block-elem-title">Элемент</p>
                                         </div>
                                         <div class="performance-info-block-tabs-hidden-block-elem-block-grey">
-                                            <img src="./front/pic/detal-elem.png">
+                                            <img src="./pic/detal-elem.png">
                                             <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
                                                 <p>Создаем, реализуем и масштабируем стратегии продвижения c учётом
                                                     юнит-экономики…</p>
@@ -4130,41 +4080,7 @@ require 'session.php';
             </div>
     </section>
     <footer>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="/front/js.js"></script>
+        <script src="jquery-3.4.1.min.js"></script>
+        <script src="js.js"></script>
     </footer>
 </body>
-<script>
-    $(document).ready(function() {
-    $("#form").submit(function (e) {
-    e.preventDefault();
-    var form = $(this);
-    var error = false;
-    if (!error) {
-        var data = form.serialize();
-        $.ajax({
-            type: "POST",
-            url: "/send.php",
-            dataType: "html",
-            data: data,
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status);
-                alert(thrownError);
-            },
-            beforeSend: function(data) {
-                $('.response').html('подождите...запрос обрабатывается')
-            },
-            success: function(data) {
-            },
-            complete: function (data) {
-                $('.response').load('responses/<?php echo $ses_id; ?>.json', function() {
-                    console.log('Данные успешно загружены');
-                });
-            },
-        });
-    }
-    return false;
-    }); 
-});
-</script>
-</html>
