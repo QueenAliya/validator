@@ -4155,7 +4155,7 @@ $(document).ready(function() {
         var data = form.serialize();
         $.ajax({
             type: "POST",
-            url: "/send.php",
+            url: "/getPerfomance.php",
             dataType: "html",
             data: data,
             error: function (xhr, ajaxOptions, thrownError) {
@@ -4168,9 +4168,12 @@ $(document).ready(function() {
             success: function(data) {
             },
             complete: function (data) {
-                $('.response').load('responses/<?php echo $ses_id; ?>.json', function() {
-                    console.log('Данные успешно загружены');
-                });
+                var today = new Date();
+                // var today = new Date(year, month, date, hours, minutes, seconds, ms);
+                // $('.response').load('responses/<?php echo $ses_id; ?>.json', function() {
+                //     console.log('Данные успешно загружены');
+                // });
+                $('.response').innerHTML = today + 'данные загружены';
             },
         });
     }

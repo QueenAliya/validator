@@ -115,12 +115,16 @@ Class ApiFetcher{
     }
 }
 if ($inputUrl) {
+    $startTime = microtime(true);
     $cleanedUrl = filter_var($inputUrl, FILTER_SANITIZE_URL);
 
     $apiFetcher = new ApiFetcher($key, $cleanedUrl);
     $data = $apiFetcher->getData();
     
     $ses_id = session_id();
+    $endTime = microtime(true);
+    $executionTime = $endTime - $startTime;
+    file_put_contents('responses/execTime.txt', $executionTime);
     $apiFetcher->saveDataToFile($data, 'responses/' . $ses_id . '.json');
 }
 
