@@ -560,6 +560,19 @@ input#link{
     padding-right: 164px;
 }
 
+.performance-info-block-top-left-circle{
+    border-radius: 50%;
+    background-color: #ffd6c4;
+    color: #ff5a13;
+    width: 160px;
+    height: 160px;
+    padding: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 57px;
+    font-family: var(--hoves-400);
+}
 
 .performance-info-block-top-left-svg {
     position: relative;

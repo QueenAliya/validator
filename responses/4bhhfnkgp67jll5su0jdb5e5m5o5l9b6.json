@@ -1,41 +1,41 @@
 {
     "data": {
         "id": "https:\/\/supermarine.ru\/",
-        "time": "2024-09-10T13:45"
+        "time": "2024-09-11T13:57"
     },
     "pagespeed_desktop_1": {
         "LARGEST_CONTENTFUL_PAINT_MS": 1218,
         "INTERACTION_TO_NEXT_PAINT": 34,
         "CUMULATIVE_LAYOUT_SHIFT_SCORE": 15,
-        "FIRST_CONTENTFUL_PAINT_MS": 1190,
-        "FIRST_INPUT_DELAY_MS": 2,
-        "EXPERIMENTAL_TIME_TO_FIRST_BYTE": 620
+        "FIRST_CONTENTFUL_PAINT_MS": 1206,
+        "FIRST_INPUT_DELAY_MS": "no percentile",
+        "EXPERIMENTAL_TIME_TO_FIRST_BYTE": 606
     },
     "pagespeed_desktop_2": {
-        "first-contentful-paint": 890.7102093148526,
-        "largest-contentful-paint": 2132.0219659447407,
-        "total-blocking-time": 183,
+        "first-contentful-paint": 828.2045233598747,
+        "largest-contentful-paint": 1395.2766236877596,
+        "total-blocking-time": 222.99999999999955,
         "cumulative-layout-shift": 0,
-        "speed-index": 1867.682209453328,
-        "server-response-time": 255,
-        "performance": 0.8
+        "speed-index": 1160.867694446609,
+        "server-response-time": 84,
+        "performance": 0.87
     },
     "pagespeed_mobile_1": {
-        "LARGEST_CONTENTFUL_PAINT_MS": 2245,
+        "LARGEST_CONTENTFUL_PAINT_MS": 2238,
         "INTERACTION_TO_NEXT_PAINT": 111,
         "CUMULATIVE_LAYOUT_SHIFT_SCORE": 1,
-        "FIRST_CONTENTFUL_PAINT_MS": 2146,
-        "FIRST_INPUT_DELAY_MS": 14,
-        "EXPERIMENTAL_TIME_TO_FIRST_BYTE": 670
+        "FIRST_CONTENTFUL_PAINT_MS": 2115,
+        "FIRST_INPUT_DELAY_MS": "no percentile",
+        "EXPERIMENTAL_TIME_TO_FIRST_BYTE": 655
     },
     "pagespeed_mobile_2": {
-        "first-contentful-paint": 3461.61136551005,
-        "largest-contentful-paint": 11323.029030264597,
-        "total-blocking-time": 1801,
+        "first-contentful-paint": 3160.111835137347,
+        "largest-contentful-paint": 9208.098462052258,
+        "total-blocking-time": 2503.5,
         "cumulative-layout-shift": 0,
-        "speed-index": 6437.540216933614,
-        "server-response-time": 366,
-        "performance": 0.35
+        "speed-index": 4354.7148751749555,
+        "server-response-time": 99,
+        "performance": 0.38
     },
     "w3c_validator": {
         "url": "https:\/\/supermarine.ru\/",
@@ -1596,7 +1596,7 @@
                 "lastColumn": 103,
                 "firstColumn": 21,
                 "message": "An \u201cimg\u201d element must have an \u201calt\u201d attribute, except under certain conditions. For details, consult guidance on providing text alternatives for images.",
-                "extract": "          <img src=\"\/bitrix\/tools\/captcha.php?captcha_code=0c436ae40d2dd2e7e5701f526257bf6a\">\n     ",
+                "extract": "          <img src=\"\/bitrix\/tools\/captcha.php?captcha_code=0b49bd6ce00129d527ab74c99d28bd64\">\n     ",
                 "hiliteStart": 10,
                 "hiliteLength": 83
             },

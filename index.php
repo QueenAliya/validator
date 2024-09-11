@@ -29,15 +29,15 @@ require 'session.php';
             $data = json_decode($json_response, true);
         }
         if ($data) {
-            echo 'id - ' . $data['data']['id'] . '<br>';
-            echo 'time - ' . $data['data']['time'] . '<br>';
-            echo 'performance - ' . $data['pagespeed_desktop_2']['first-performance'] . '<br>';
-            echo 'first-contentful-paint - ' . $data['pagespeed_desktop_2']['first-contentful-paint'] . '<br>';
-            echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_2']['largest-contentful-paint'] . '<br>';
-            echo 'total-blocking-time - ' . $data['pagespeed_desktop_2']['total-blocking-time'] . '<br>';
-            echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_2']['cumulative-layout-shift'] . '<br>';
-            echo 'server-response-time - ' . $data['pagespeed_desktop_2']['server-response-time'] . '<br>';
-            echo 'speed-index - ' . $data['pagespeed_desktop_2']['speed-index'] . '<br>';
+            // echo 'id - ' . $data['data']['id'] . '<br>';
+            // echo 'time - ' . $data['data']['time'] . '<br>';
+            // echo 'performance - ' . $data['pagespeed_desktop_2']['performance'] . '<br>';
+            // echo 'first-contentful-paint - ' . $data['pagespeed_desktop_2']['first-contentful-paint'] . '<br>';
+            // echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_2']['largest-contentful-paint'] . '<br>';
+            // echo 'total-blocking-time - ' . $data['pagespeed_desktop_2']['total-blocking-time'] . '<br>';
+            // echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_2']['cumulative-layout-shift'] . '<br>';
+            // echo 'server-response-time - ' . $data['pagespeed_desktop_2']['server-response-time'] . '<br>';
+            // echo 'speed-index - ' . $data['pagespeed_desktop_2']['speed-index'] . '<br>';
             // foreach ($data['w3c_validator']['messages'] as $message) {
             //     echo "Info: {$message['message']}<br><br>";
             //     echo "From line {$message['lastLine']}, column {$message['firstColumn']}; to line {$message['lastLine']}, column {$message['lastColumn']}<br><br>";
@@ -302,7 +302,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_mobile_1']['CUMULATIVE_LAYOUT_SHIFT_SCORE']?></span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_mobile_1']['CUMULATIVE_LAYOUT_SHIFT_SCORE']/100?></span>
                                             </span>
                                         </span>
                                     </div>
@@ -1314,13 +1314,14 @@ require 'session.php';
                 <div class="performance-info-block-top">
                     <div class="performance-info-block-top-left">
                         <div class="performance-info-block-top-left-svg">
-                            <svg class="performance-info-block-top-left-svg-show" width="162" height="162"
+                            <div class="performance-info-block-top-left-circle"><?=($data['pagespeed_mobile_2']['performance'])*100?></div>
+                            <!-- <svg class="performance-info-block-top-left-svg-show" width="162" height="162"
                                 viewBox="0 0 162 162" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="81" cy="81" r="81" fill="#FF5A13" fill-opacity="0.25" />
                                 <path
                                     d="M76.493 101.75H70.403V93.0499H51.669V88.1199L66.981 61.1499H76.493V87.5979H81.423V93.0499H76.493V101.75ZM58.803 87.3079V87.5979H70.403V68.8059H69.243L58.803 87.3079ZM95.1214 101.75H88.4514L102.487 66.9499H83.1734V61.1499H109.389V66.3119L95.1214 101.75Z"
                                     fill="#FF5A13" />
-                            </svg>
+                            </svg> -->
                             <p class="performance-info-block-top-left-svg-text one">SI</p>
                             <p class="performance-info-block-top-left-svg-text two">FCP</p>
                             <p class="performance-info-block-top-left-svg-text three">LCP</p>
@@ -1377,7 +1378,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">First Contentful Paint</p>
-                                <p class="performance-info-block-indicators-item-block-text red">3,2 сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_2']['first-contentful-paint'])?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Первая отрисовка
                                     контента – показатель, который отражает время между началом загрузки страницы и
                                     появлением первого изображения или блока текста. Подробнее <a
@@ -1392,7 +1393,7 @@ require 'session.php';
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Largest Contentful Paint
                                 </p>
-                                <p class="performance-info-block-indicators-item-block-text red">31,8 сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_2']['largest-contentful-paint'])?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Отрисовка самого
                                     крупного контента – показатель, который отражает время, требуемое на полную
                                     отрисовку самого крупного изображения или текстового блока.<a
@@ -1407,7 +1408,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Total Blocking Time</p>
-                                <p class="performance-info-block-indicators-item-block-text red">980 мс</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=round($data['pagespeed_mobile_2']['total-blocking-time'], 0)?> мс</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Сумма (в
                                     миллисекундах) всех периодов от первой отрисовки контента до загрузки для
                                     взаимодействия, когда скорость выполнения задач превышала 50 мс.<a
@@ -1421,7 +1422,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Cumulative Layout Shift</p>
-                                <p class="performance-info-block-indicators-item-block-text green">0</p>
+                                <p class="performance-info-block-indicators-item-block-text green"><?=round($data['pagespeed_mobile_2']['cumulative-layout-shift'], 0)?></p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Совокупное смещение
                                     макета – это величина, на которую смещаются видимые элементы области просмотра при
                                     загрузке.<a href="javascript:void(0);">Подробнее о совокупном смещении макета…</a>
@@ -1435,7 +1436,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Speed Index</p>
-                                <p class="performance-info-block-indicators-item-block-text yellow">3,5 сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text yellow"><?=roundToSec($data['pagespeed_mobile_2']['speed-index'], 0)?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Индекс скорости
                                     загрузки показывает, как быстро на странице появляется контент.<a
                                         href="javascript:void(0);">Подробнее об индексе скорости загрузки…</a></p>
@@ -1459,7 +1460,7 @@ require 'session.php';
                                 d="M7.3335 1.07136C7.3335 0.637421 7.68527 0.285645 8.11921 0.285645C8.55315 0.285645 8.90492 0.637421 8.90492 1.07136V2.11898C8.90492 2.55292 8.55315 2.90469 8.11921 2.90469C7.68527 2.90469 7.3335 2.55292 7.3335 2.11898V1.07136Z"
                                 fill="black"></path>
                         </svg>
-                        <p>Captured at 6 авг. 2024 г., 14:39 GMT+3</p>
+                        <p>Captured at 6 сент. 2024 г., 14:39 GMT+3</p>
                     </div>
                     <div class="site-perfomance-block-grey-item">
                         <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -4145,7 +4146,7 @@ require 'session.php';
     </footer>
 </body>
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $("#form").submit(function (e) {
     e.preventDefault();
     var form = $(this);
