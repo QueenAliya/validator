@@ -559,7 +559,35 @@ input#link{
     border-right: 1px solid var(--border-grey);
     padding-right: 164px;
 }
-
+.site-perfomance-circle-block div{
+    border-radius: 50%;
+    background-color: #ffd6c4;
+    color: #ff5a13;
+    width: 80px;
+    height: 80px;
+    padding: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 37px;
+    font-family: var(--hoves-400);
+}
+.performance-info-small-circle{
+    background-color: #ffd6c4;
+    color: #ff5a13;
+}
+.performance-special-small-circle{
+    background-color: #ffe8bf;
+    color: #ffa400;
+}
+.performance-recommendation-small-circle{
+    background-color: #dbf8e9;
+    color: #0cce6a;
+}
+.performance-seo-small-circle{
+    background-color: #dbf8e9;
+    color: #0cce6a;
+}
 .performance-info-block-top-left-circle{
     border-radius: 50%;
     background-color: #ffd6c4;

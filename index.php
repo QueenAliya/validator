@@ -29,15 +29,15 @@ require 'session.php';
             $data = json_decode($json_response, true);
         }
         if ($data) {
-            // echo 'id - ' . $data['data']['id'] . '<br>';
-            // echo 'time - ' . $data['data']['time'] . '<br>';
-            // echo 'performance - ' . $data['pagespeed_desktop_2']['performance'] . '<br>';
-            // echo 'first-contentful-paint - ' . $data['pagespeed_desktop_2']['first-contentful-paint'] . '<br>';
-            // echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_2']['largest-contentful-paint'] . '<br>';
-            // echo 'total-blocking-time - ' . $data['pagespeed_desktop_2']['total-blocking-time'] . '<br>';
-            // echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_2']['cumulative-layout-shift'] . '<br>';
-            // echo 'server-response-time - ' . $data['pagespeed_desktop_2']['server-response-time'] . '<br>';
-            // echo 'speed-index - ' . $data['pagespeed_desktop_2']['speed-index'] . '<br>';
+            echo 'id - ' . $data['data']['id'] . '<br>';
+            echo 'time - ' . $data['data']['time'] . '<br>';
+            echo 'performance - ' . $data['pagespeed_desktop_Perfomance']['performance'] . '<br>';
+            echo 'first-contentful-paint - ' . $data['pagespeed_desktop_Perfomance']['first-contentful-paint'] . '<br>';
+            echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_Perfomance']['largest-contentful-paint'] . '<br>';
+            echo 'total-blocking-time - ' . $data['pagespeed_desktop_Perfomance']['total-blocking-time'] . '<br>';
+            echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_Perfomance']['cumulative-layout-shift'] . '<br>';
+            echo 'server-response-time - ' . $data['pagespeed_desktop_Perfomance']['server-response-time'] . '<br>';
+            echo 'speed-index - ' . $data['pagespeed_desktop_Perfomance']['speed-index'] . '<br>';
             // foreach ($data['w3c_validator']['messages'] as $message) {
             //     echo "Info: {$message['message']}<br><br>";
             //     echo "From line {$message['lastLine']}, column {$message['firstColumn']}; to line {$message['lastLine']}, column {$message['lastColumn']}<br><br>";
@@ -52,16 +52,16 @@ require 'session.php';
         }
     ?>
     </div>
+    <!-- action="getPerfomance.php" -->
+    <form id="form" method="POST">
+    <input type="text" name="link" id="link" placeholder="введите url" required>
+    <button type="submit">Отправить</button>
+    </form> 
+    <div id="error"></div>
 
-
-
+    <?php if($data){?>
     <section class="reports-top">
         <div class="container">
-            <form id="form" method="POST" action="send.php">
-            <input type="text" name="link" id="link" placeholder="введите url" required>
-            <button type="submit">Отправить</button>
-            </form> 
-            <div id="error"></div>
 
             <div class="reports-top-main">
                 <h1>Отчёт о производительности сайта</h1>
@@ -147,7 +147,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_1']['LARGEST_CONTENTFUL_PAINT_MS'])?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_ActualPerfomance']['LARGEST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -225,7 +225,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_mobile_1']['INTERACTION_TO_NEXT_PAINT']?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_mobile_ActualPerfomance']['INTERACTION_TO_NEXT_PAINT']?>
                                                     мс</span>
                                             </span>
                                         </span>
@@ -302,7 +302,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_mobile_1']['CUMULATIVE_LAYOUT_SHIFT_SCORE']/100?></span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_mobile_ActualPerfomance']['CUMULATIVE_LAYOUT_SHIFT_SCORE']/100?></span>
                                             </span>
                                         </span>
                                     </div>
@@ -381,7 +381,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_1']['FIRST_CONTENTFUL_PAINT_MS'])?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_mobile_ActualPerfomance']['FIRST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -459,7 +459,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item grey"><?=$data['pagespeed_mobile_1']['FIRST_INPUT_DELAY_MS']?> мс</span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item grey"><?=$data['pagespeed_mobile_ActualPerfomance']['FIRST_INPUT_DELAY_MS']?> мс</span>
                                             </span>
                                         </span>
                                     </div>
@@ -536,7 +536,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow"><?=roundToSec($data['pagespeed_mobile_1']['EXPERIMENTAL_TIME_TO_FIRST_BYTE'])?>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow"><?=roundToSec($data['pagespeed_mobile_ActualPerfomance']['EXPERIMENTAL_TIME_TO_FIRST_BYTE'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -716,7 +716,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">5,2
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_desktop_ActualPerfomance']['LARGEST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -794,7 +794,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">537
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=$data['pagespeed_desktop_ActualPerfomance']['INTERACTION_TO_NEXT_PAINT']?>
                                                     мс</span>
                                             </span>
                                         </span>
@@ -871,7 +871,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green">0</span>
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item green"><?=$data['pagespeed_desktop_ActualPerfomance']['CUMULATIVE_LAYOUT_SHIFT_SCORE']?></span>
                                             </span>
                                         </span>
                                     </div>
@@ -950,7 +950,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item">3,1
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item"><?=roundToSec($data['pagespeed_desktop_ActualPerfomance']['FIRST_CONTENTFUL_PAINT_MS'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -1091,7 +1091,7 @@ require 'session.php';
                                         <rect x="0.861328" y="0.517456" width="6.27817" height="6.27817"
                                             fill="#FFA400" />
                                     </svg>
-                                    <a href="javascript:void(0);">Cumulative Layout Shift (CLS)</a>
+                                    <a href="javascript:void(0);">Time to First Byte (TTFB)</a>
                                 </div>
                                 <div class="site-perfomance-block-info-line">
                                     <div class="site-perfomance-block-info-line-text">
@@ -1099,7 +1099,7 @@ require 'session.php';
                                             class="site-perfomance-block-info-line-text-block site-perfomance-block-info-line-text-block-position">
                                             <span class="site-perfomance-block-info-line-text-block-nowrap">
                                                 <span
-                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow">1,3
+                                                    class="Ykn2A site-perfomance-block-info-line-text-block-nowrap-item yellow"><?=roundToSec($data['pagespeed_desktop_ActualPerfomance']['EXPERIMENTAL_TIME_TO_FIRST_BYTE'])?>
                                                     сек.</span>
                                             </span>
                                         </span>
@@ -1258,51 +1258,19 @@ require 'session.php';
         <div class="container">
             <div class="site-perfomance-circle-wrap">
                 <div class="site-perfomance-circle-block">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="40" cy="40" r="40" fill="#FF5A13" fill-opacity="0.25" />
-                        <path
-                            d="M40 2.0184C40 0.90367 40.9044 -0.00531216 42.0177 0.0508985C50.3445 0.471314 58.3512 3.4855 64.9021 8.69691C71.9808 14.3281 76.9418 22.1922 78.9757 31.0058C81.0096 39.8195 79.9962 49.0623 76.1009 57.2258C72.4959 64.7808 66.6197 70.9987 59.3191 75.0253C58.343 75.5637 57.1317 75.1429 56.6433 74.1409C56.1548 73.1389 56.5745 71.9356 57.5475 71.3917C64.0288 67.7689 69.2458 62.2184 72.4575 55.4874C75.9597 48.1477 76.8709 39.8377 75.0423 31.9135C73.2136 23.9893 68.7533 16.9189 62.389 11.856C56.5525 7.213 49.4309 4.50982 42.0175 4.09342C40.9045 4.0309 40 3.13314 40 2.0184Z"
-                            fill="#FF5A13" />
-                        <path
-                            d="M37.488 50H34.548V45.8H25.504V43.42L32.896 30.4H37.488V43.168H39.868V45.8H37.488V50ZM28.948 43.028V43.168H34.548V34.096H33.988L28.948 43.028ZM46.481 50H43.261L50.037 33.2H40.713V30.4H53.369V32.892L46.481 50Z"
-                            fill="#FF5A13" />
-                    </svg>
+                    <div class="performance-info-small-circle"><?=$data['pagespeed_mobile_Perfomance']*100?></div>
                     <p>Производительность</p>
                 </div>
                 <div class="site-perfomance-circle-block">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="40" cy="40" r="40" fill="#FFA400" fill-opacity="0.25" />
-                        <path
-                            d="M40 1.88173C40 0.842479 40.8431 -0.00461834 41.8812 0.0442419C49.8921 0.42129 57.6212 3.19952 64.0523 8.03925C70.9855 13.2569 76.034 20.5876 78.4364 28.9255C80.8388 37.2635 80.4647 46.1566 77.3705 54.2633C74.2764 62.3701 68.63 69.2509 61.2831 73.8678C53.9362 78.4847 45.2872 80.5874 36.6407 79.8587C27.9942 79.13 19.8191 75.6093 13.3486 69.8279C6.87803 64.0464 2.46297 56.3176 0.76933 47.8073C-0.801645 39.9134 0.0479024 31.7442 3.18319 24.3627C3.58948 23.4062 4.71845 23.014 5.65483 23.4648C6.59121 23.9156 6.97994 25.0386 6.57833 25.9971C3.79449 32.6412 3.0488 39.9797 4.4604 47.0728C5.9947 54.7823 9.99436 61.7839 15.8561 67.0215C21.7178 72.259 29.1238 75.4484 36.9567 76.1085C44.7897 76.7687 52.625 74.8639 59.2807 70.6813C65.9363 66.4988 71.0515 60.2654 73.8545 52.9214C76.6575 45.5773 76.9964 37.521 74.82 29.9675C72.6437 22.414 68.0702 15.7731 61.7893 11.0463C56.0106 6.69757 49.0751 4.18613 41.881 3.81229C40.8432 3.75836 40 2.92098 40 1.88173Z"
-                            fill="#FFA400" />
-                        <path
-                            d="M31.524 50H28.304L35.08 33.2H25.756V30.4H38.412V32.892L31.524 50ZM47.2261 30.12C48.4954 30.12 49.6528 30.4187 50.6981 31.016C51.7621 31.6133 52.5928 32.4253 53.1901 33.452C53.8061 34.46 54.1141 35.58 54.1141 36.812C54.1141 37.5587 53.9928 38.2867 53.7501 38.996C53.5074 39.7053 53.2274 40.3027 52.9101 40.788L46.9741 50H43.6701L48.0661 43.084C47.6554 43.1773 47.2168 43.224 46.7501 43.224C45.5928 43.224 44.5194 42.944 43.5301 42.384C42.5408 41.824 41.7568 41.0587 41.1781 40.088C40.5994 39.1173 40.3101 38.0253 40.3101 36.812C40.3101 35.58 40.6088 34.46 41.2061 33.452C41.8221 32.4253 42.6528 31.6133 43.6981 31.016C44.7621 30.4187 45.9381 30.12 47.2261 30.12ZM47.2261 40.732C47.9541 40.732 48.6168 40.564 49.2141 40.228C49.8301 39.8733 50.3061 39.3973 50.6421 38.8C50.9968 38.2027 51.1741 37.54 51.1741 36.812C51.1741 35.692 50.7914 34.7587 50.0261 34.012C49.2794 33.2467 48.3461 32.864 47.2261 32.864C46.0874 32.864 45.1354 33.2467 44.3701 34.012C43.6234 34.7587 43.2501 35.692 43.2501 36.812C43.2501 37.54 43.4181 38.2027 43.7541 38.8C44.1088 39.3973 44.5848 39.8733 45.1821 40.228C45.7981 40.564 46.4794 40.732 47.2261 40.732Z"
-                            fill="#FFA400" />
-                    </svg>
+                    <div class="performance-special-small-circle"><?=($data['pagespeed_desktop_Accessibility'])*100?></div>
                     <p>Специальные<span class="br-desktop">возможности</span></p>
                 </div>
                 <div class="site-perfomance-circle-block">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="40" cy="40" r="40" fill="#0CCE6A" fill-opacity="0.15" />
-                        <path
-                            d="M40 1.88173C40 0.842479 40.843 -0.00462151 41.8811 0.0442189C51.4172 0.492872 60.503 4.3411 67.472 10.9261C74.8979 17.9429 79.3575 27.5352 79.9359 37.7355C80.5142 47.9358 77.1676 57.9707 70.5825 65.782C63.9974 73.5933 54.6729 78.5887 44.5217 79.7436C34.3706 80.8985 24.1622 78.1254 15.9907 71.993C7.81917 65.8607 2.30387 56.8339 0.576121 46.7644C-1.15163 36.695 1.03914 26.346 6.69906 17.8404C12.0107 9.85818 19.9998 4.0673 29.1914 1.48795C30.192 1.20717 31.2038 1.84325 31.4372 2.85594C31.6707 3.86863 31.0371 4.87402 30.0379 5.15969C21.7828 7.51982 14.6113 12.7435 9.83223 19.9253C4.70483 27.6307 2.72018 37.0059 4.28537 46.128C5.85057 55.2501 10.8469 63.4275 18.2497 68.9829C25.6524 74.5383 34.9002 77.0505 44.0963 76.0043C53.2924 74.958 61.7395 70.4326 67.7051 63.3563C73.6707 56.2799 76.7024 47.1891 76.1784 37.9486C75.6545 28.708 71.6145 20.0182 64.8872 13.6616C58.6171 7.73686 50.4553 4.25769 41.8811 3.81227C40.8432 3.75836 40 2.92098 40 1.88173Z"
-                            fill="#0CCE6A" />
-                        <path
-                            d="M32.98 30.12C34.2493 30.12 35.4067 30.4187 36.452 31.016C37.516 31.6133 38.3467 32.4253 38.944 33.452C39.56 34.46 39.868 35.58 39.868 36.812C39.868 37.5587 39.7467 38.2867 39.504 38.996C39.2613 39.7053 38.9813 40.3027 38.664 40.788L32.728 50H29.424L33.82 43.084C33.4093 43.1773 32.9707 43.224 32.504 43.224C31.3467 43.224 30.2733 42.944 29.284 42.384C28.2947 41.824 27.5107 41.0587 26.932 40.088C26.3533 39.1173 26.064 38.0253 26.064 36.812C26.064 35.58 26.3627 34.46 26.96 33.452C27.576 32.4253 28.4067 31.6133 29.452 31.016C30.516 30.4187 31.692 30.12 32.98 30.12ZM32.98 40.732C33.708 40.732 34.3707 40.564 34.968 40.228C35.584 39.8733 36.06 39.3973 36.396 38.8C36.7507 38.2027 36.928 37.54 36.928 36.812C36.928 35.692 36.5453 34.7587 35.78 34.012C35.0333 33.2467 34.1 32.864 32.98 32.864C31.8413 32.864 30.8893 33.2467 30.124 34.012C29.3773 34.7587 29.004 35.692 29.004 36.812C29.004 37.54 29.172 38.2027 29.508 38.8C29.8627 39.3973 30.3387 39.8733 30.936 40.228C31.552 40.564 32.2333 40.732 32.98 40.732ZM48.8225 37.176C49.9799 37.176 51.0532 37.456 52.0425 38.016C53.0319 38.576 53.8159 39.3413 54.3945 40.312C54.9732 41.2827 55.2625 42.3747 55.2625 43.588C55.2625 44.82 54.9545 45.9493 54.3385 46.976C53.7412 47.984 52.9105 48.7867 51.8465 49.384C50.8012 49.9813 49.6439 50.28 48.3745 50.28C47.0865 50.28 45.9105 49.9813 44.8465 49.384C43.8012 48.7867 42.9705 47.984 42.3545 46.976C41.7572 45.9493 41.4585 44.82 41.4585 43.588C41.4585 42.8227 41.5799 42.0853 41.8225 41.376C42.0652 40.6667 42.3452 40.0787 42.6625 39.612L48.5985 30.4H51.9305L47.5065 37.316C48.0665 37.2227 48.5052 37.176 48.8225 37.176ZM48.3745 47.536C49.4945 47.536 50.4279 47.1627 51.1745 46.416C51.9399 45.6507 52.3225 44.708 52.3225 43.588C52.3225 42.86 52.1452 42.1973 51.7905 41.6C51.4545 41.0027 50.9785 40.536 50.3625 40.2C49.7652 39.8453 49.1025 39.668 48.3745 39.668C47.6279 39.668 46.9465 39.8453 46.3305 40.2C45.7332 40.536 45.2572 41.0027 44.9025 41.6C44.5665 42.1973 44.3985 42.86 44.3985 43.588C44.3985 44.708 44.7719 45.6507 45.5185 46.416C46.2839 47.1627 47.2359 47.536 48.3745 47.536Z"
-                            fill="#0CCE6A" />
-                    </svg>
+                    <div class="performance-recommendation-small-circle"><?=($data['pagespeed_desktop_BestPractices'])*100?></div>
                     <p>Рекомендации</p>
                 </div>
                 <div class="site-perfomance-circle-block">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="40" cy="40" r="40" fill="#0CCE6A" fill-opacity="0.15" />
-                        <path
-                            d="M40 1.88173C40 0.842479 40.843 -0.00462151 41.8811 0.0442189C51.4172 0.492872 60.503 4.3411 67.472 10.9261C74.8979 17.9429 79.3575 27.5352 79.9359 37.7355C80.5142 47.9358 77.1676 57.9707 70.5825 65.782C63.9974 73.5933 54.6729 78.5887 44.5217 79.7436C34.3706 80.8985 24.1622 78.1254 15.9907 71.993C7.81917 65.8607 2.30387 56.8339 0.576121 46.7644C-1.15163 36.695 1.03914 26.346 6.69906 17.8404C12.0107 9.85818 19.9998 4.0673 29.1914 1.48795C30.192 1.20717 31.2038 1.84325 31.4372 2.85594C31.6707 3.86863 31.0371 4.87402 30.0379 5.15969C21.7828 7.51982 14.6113 12.7435 9.83223 19.9253C4.70483 27.6307 2.72018 37.0059 4.28537 46.128C5.85057 55.2501 10.8469 63.4275 18.2497 68.9829C25.6524 74.5383 34.9002 77.0505 44.0963 76.0043C53.2924 74.958 61.7395 70.4326 67.7051 63.3563C73.6707 56.2799 76.7024 47.1891 76.1784 37.9486C75.6545 28.708 71.6145 20.0182 64.8872 13.6616C58.6171 7.73686 50.4553 4.25769 41.8811 3.81227C40.8432 3.75836 40 2.92098 40 1.88173Z"
-                            fill="#0CCE6A" />
-                        <path
-                            d="M32.98 30.12C34.2493 30.12 35.4067 30.4187 36.452 31.016C37.516 31.6133 38.3467 32.4253 38.944 33.452C39.56 34.46 39.868 35.58 39.868 36.812C39.868 37.5587 39.7467 38.2867 39.504 38.996C39.2613 39.7053 38.9813 40.3027 38.664 40.788L32.728 50H29.424L33.82 43.084C33.4093 43.1773 32.9707 43.224 32.504 43.224C31.3467 43.224 30.2733 42.944 29.284 42.384C28.2947 41.824 27.5107 41.0587 26.932 40.088C26.3533 39.1173 26.064 38.0253 26.064 36.812C26.064 35.58 26.3627 34.46 26.96 33.452C27.576 32.4253 28.4067 31.6133 29.452 31.016C30.516 30.4187 31.692 30.12 32.98 30.12ZM32.98 40.732C33.708 40.732 34.3707 40.564 34.968 40.228C35.584 39.8733 36.06 39.3973 36.396 38.8C36.7507 38.2027 36.928 37.54 36.928 36.812C36.928 35.692 36.5453 34.7587 35.78 34.012C35.0333 33.2467 34.1 32.864 32.98 32.864C31.8413 32.864 30.8893 33.2467 30.124 34.012C29.3773 34.7587 29.004 35.692 29.004 36.812C29.004 37.54 29.172 38.2027 29.508 38.8C29.8627 39.3973 30.3387 39.8733 30.936 40.228C31.552 40.564 32.2333 40.732 32.98 40.732ZM48.8225 37.176C49.9799 37.176 51.0532 37.456 52.0425 38.016C53.0319 38.576 53.8159 39.3413 54.3945 40.312C54.9732 41.2827 55.2625 42.3747 55.2625 43.588C55.2625 44.82 54.9545 45.9493 54.3385 46.976C53.7412 47.984 52.9105 48.7867 51.8465 49.384C50.8012 49.9813 49.6439 50.28 48.3745 50.28C47.0865 50.28 45.9105 49.9813 44.8465 49.384C43.8012 48.7867 42.9705 47.984 42.3545 46.976C41.7572 45.9493 41.4585 44.82 41.4585 43.588C41.4585 42.8227 41.5799 42.0853 41.8225 41.376C42.0652 40.6667 42.3452 40.0787 42.6625 39.612L48.5985 30.4H51.9305L47.5065 37.316C48.0665 37.2227 48.5052 37.176 48.8225 37.176ZM48.3745 47.536C49.4945 47.536 50.4279 47.1627 51.1745 46.416C51.9399 45.6507 52.3225 44.708 52.3225 43.588C52.3225 42.86 52.1452 42.1973 51.7905 41.6C51.4545 41.0027 50.9785 40.536 50.3625 40.2C49.7652 39.8453 49.1025 39.668 48.3745 39.668C47.6279 39.668 46.9465 39.8453 46.3305 40.2C45.7332 40.536 45.2572 41.0027 44.9025 41.6C44.5665 42.1973 44.3985 42.86 44.3985 43.588C44.3985 44.708 44.7719 45.6507 45.5185 46.416C46.2839 47.1627 47.2359 47.536 48.3745 47.536Z"
-                            fill="#0CCE6A" />
-                    </svg>
+                    <div class="performance-seo-small-circle"><?=($data['pagespeed_desktop_Seo'])*100?></div>
                     <p>Поисковая<span class="br-desktop">оптимизация</span></p>
                 </div>
             </div>
@@ -1314,14 +1282,7 @@ require 'session.php';
                 <div class="performance-info-block-top">
                     <div class="performance-info-block-top-left">
                         <div class="performance-info-block-top-left-svg">
-                            <div class="performance-info-block-top-left-circle"><?=($data['pagespeed_mobile_2']['performance'])*100?></div>
-                            <!-- <svg class="performance-info-block-top-left-svg-show" width="162" height="162"
-                                viewBox="0 0 162 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="81" cy="81" r="81" fill="#FF5A13" fill-opacity="0.25" />
-                                <path
-                                    d="M76.493 101.75H70.403V93.0499H51.669V88.1199L66.981 61.1499H76.493V87.5979H81.423V93.0499H76.493V101.75ZM58.803 87.3079V87.5979H70.403V68.8059H69.243L58.803 87.3079ZM95.1214 101.75H88.4514L102.487 66.9499H83.1734V61.1499H109.389V66.3119L95.1214 101.75Z"
-                                    fill="#FF5A13" />
-                            </svg> -->
+                            <div class="performance-info-block-top-left-circle"><?=($data['pagespeed_mobile_Perfomance']['performance'])*100?></div>
                             <p class="performance-info-block-top-left-svg-text one">SI</p>
                             <p class="performance-info-block-top-left-svg-text two">FCP</p>
                             <p class="performance-info-block-top-left-svg-text three">LCP</p>
@@ -1378,7 +1339,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">First Contentful Paint</p>
-                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_2']['first-contentful-paint'])?> сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_Perfomance']['first-contentful-paint'])?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Первая отрисовка
                                     контента – показатель, который отражает время между началом загрузки страницы и
                                     появлением первого изображения или блока текста. Подробнее <a
@@ -1393,7 +1354,7 @@ require 'session.php';
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Largest Contentful Paint
                                 </p>
-                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_2']['largest-contentful-paint'])?> сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=roundToSec($data['pagespeed_mobile_Perfomance']['largest-contentful-paint'])?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Отрисовка самого
                                     крупного контента – показатель, который отражает время, требуемое на полную
                                     отрисовку самого крупного изображения или текстового блока.<a
@@ -1408,7 +1369,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Total Blocking Time</p>
-                                <p class="performance-info-block-indicators-item-block-text red"><?=round($data['pagespeed_mobile_2']['total-blocking-time'], 0)?> мс</p>
+                                <p class="performance-info-block-indicators-item-block-text red"><?=round($data['pagespeed_mobile_Perfomance']['total-blocking-time'], 0)?> мс</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Сумма (в
                                     миллисекундах) всех периодов от первой отрисовки контента до загрузки для
                                     взаимодействия, когда скорость выполнения задач превышала 50 мс.<a
@@ -1422,7 +1383,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Cumulative Layout Shift</p>
-                                <p class="performance-info-block-indicators-item-block-text green"><?=round($data['pagespeed_mobile_2']['cumulative-layout-shift'], 0)?></p>
+                                <p class="performance-info-block-indicators-item-block-text green"><?=round($data['pagespeed_mobile_Perfomance']['cumulative-layout-shift'], 0)?></p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Совокупное смещение
                                     макета – это величина, на которую смещаются видимые элементы области просмотра при
                                     загрузке.<a href="javascript:void(0);">Подробнее о совокупном смещении макета…</a>
@@ -1436,7 +1397,7 @@ require 'session.php';
                             </svg>
                             <div class="performance-info-block-indicators-item-block">
                                 <p class="performance-info-block-indicators-item-block-text">Speed Index</p>
-                                <p class="performance-info-block-indicators-item-block-text yellow"><?=roundToSec($data['pagespeed_mobile_2']['speed-index'], 0)?> сек.</p>
+                                <p class="performance-info-block-indicators-item-block-text yellow"><?=roundToSec($data['pagespeed_mobile_Perfomance']['speed-index'], 0)?> сек.</p>
                                 <p class="performance-info-block-indicators-item-block-text-hidden">Индекс скорости
                                     загрузки показывает, как быстро на странице появляется контент.<a
                                         href="javascript:void(0);">Подробнее об индексе скорости загрузки…</a></p>
@@ -4144,41 +4105,59 @@ require 'session.php';
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="/front/js.js"></script>
     </footer>
+    <?}?>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/front/js.js"></script>
 <script>
+    console.log('console');
 $(document).ready(function() {
     $("#form").submit(function (e) {
-    e.preventDefault();
-    var form = $(this);
-    var error = false;
-    if (!error) {
-        var data = form.serialize();
-        $.ajax({
-            type: "POST",
-            url: "/getPerfomance.php",
-            dataType: "html",
-            data: data,
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status);
-                alert(thrownError);
-            },
-            beforeSend: function(data) {
-                $('.response').html('подождите...запрос обрабатывается')
-            },
-            success: function(data) {
-            },
-            complete: function (data) {
-                var today = new Date();
-                // var today = new Date(year, month, date, hours, minutes, seconds, ms);
-                // $('.response').load('responses/<?php echo $ses_id; ?>.json', function() {
-                //     console.log('Данные успешно загружены');
-                // });
-                $('.response').innerHTML = today + 'данные загружены';
-            },
-        });
-    }
-    return false;
-    }); 
+        e.preventDefault();
+        var form = $(this);
+        var error = false;
+        if (!error) {
+            var data = form.serialize();
+            $.ajax({
+                type: "POST",
+                url: "/getPerfomance.php",
+                dataType: "html",
+                data: data,
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                },
+                beforeSend: function(data) {
+                    $('.response').html('подождите...запрос обрабатывается');
+                    console.log('Запрос отправлен2');
+                    // setInterval(loadUpdates, 2000);
+                },
+                success: function(data) {
+                    // Выводим полученные данные из getPerfomance.php
+                },
+                complete: function (data) {
+                    // Запускаем опрос обновлений через 2 секунд
+                    $('.response').html('Запрос обработан2');
+                    console.log('Запрос обработан2');
+                },
+            });
+        }
+        return false;
+    });
+
+    // function loadUpdates() {
+    //     var ses_id = '<?php echo $ses_id; ?>'; // Получаем идентификатор сессии PHP
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/responses/" + ses_id + '.json',
+    //         dataType: "json",
+    //         success: function(data) {
+    //             console.log('+');
+    //             $('.response').html(data);
+    //         },
+    //     });
+    // }
 });
+
 </script>
 </html>
