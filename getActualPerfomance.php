@@ -15,17 +15,32 @@ Class ApiFetcher{
     public function getData() {
         $data = [];
         // API для десктопа
-        $desktopUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY';
+        $desktopUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key;
+        $desktopUrlAccessibility = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY';
+        $desktopUrlBestPractices = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=BEST_PRACTICES';
+        $desktopUrlSeo = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=SEO';
         $rawArray = $this->fetchDataPagespeed($desktopUrl);
+        $rawArrayAccessibility = $this->fetchDataPagespeed($desktopUrlAccessibility);
+        $rawArrayBestPractices = $this->fetchDataPagespeed($desktopUrlBestPractices);
+        $rawArraySeo = $this->fetchDataPagespeed($desktopUrlSeo);
         $data['data']['id'] = $rawArray['id'];
         $time = $rawArray['analysisUTCTimestamp'];
         $data['data']['time'] = substr($time, 0, 16);
         $data['pagespeed_desktop_ActualPerfomance'] = $this->getActualPerfomance($rawArray);
+        $data['pagespeed_desktop_Perfomance'] = $this->getPerfomance($rawArray);
+        $data['pagespeed_desktop_Accessibility'] = $this->getAccessibility($rawArrayAccessibility);
+        $data['pagespeed_desktop_BestPractices'] = $this->getBestPractices($rawArrayBestPractices);
+        $data['pagespeed_desktop_Seo'] = $this->getSeo($rawArraySeo);
 
         // API для мобилки
         $mobileUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key;
         $rawArray = $this->fetchDataPagespeed($mobileUrl);
         $data['pagespeed_mobile_ActualPerfomance'] = $this->getActualPerfomance($rawArray);
+        $data['pagespeed_mobile_Perfomance'] = $this->getPerfomance($rawArray);
+
+        // валидатор W3C
+        $validatorUrl = 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($this->url);
+        $data['w3c_validator'] = $this->fetchDataW3($validatorUrl);
 
         return $data;
     }
@@ -54,6 +69,60 @@ Class ApiFetcher{
         return $generalArray;
     }
 
+    private function getPerfomance($array) {
+        $lighthouseResult = $array['lighthouseResult']; 
+        $performance = $lighthouseResult['categories']['performance']['score']; 
+        $performance = $lighthouseResult['categories']['performance']['score']; 
+        $audits = $lighthouseResult['audits'];
+        $finalScreenshot = $audits['final-screenshot']['details']['data'];
+        $generalArray = [];
+        $arrayKeys = [
+            'first-contentful-paint', 
+            'largest-contentful-paint',
+            'total-blocking-time', 
+            'cumulative-layout-shift', 
+            'speed-index',
+            'server-response-time',
+            // 'final-screenshot'
+        ];
+        foreach ($arrayKeys as $key) {
+            if(isset($audits[$key])) {
+                $generalArray[$key] = $audits[$key]['numericValue'];
+                // if (array_key_exists('details', $audits[$key])) {
+                //     $generalArray[$key] = 'rty';
+                //     // $generalArray[$key]['score'] = $audits[$key]['score'];
+                //     // $generalArray[$key]['details']['timing'] = $audits[$key]['details']['timing'];
+                // }
+                // else{
+                //     $generalArray[$key]['details'] = 'no url data';
+                // }
+            }
+            else{
+                $generalArray[$key] = 'no numericValue';
+            }
+        }
+        $generalArray['performance'] =  $performance;
+        $generalArray['final-screenshot'] =  $finalScreenshot;
+        
+        return $generalArray;
+    }
+
+    private function getAccessibility($array) {
+        $lighthouseResult = $array['lighthouseResult']; 
+        $accessibility = $lighthouseResult['categories']['accessibility']['score']; 
+        return $accessibility;
+    }
+
+    private function getBestPractices($array) {
+        $lighthouseResult = $array['lighthouseResult']; 
+        $best_practices = $lighthouseResult['categories']['best-practices']['score']; 
+        return $best_practices;
+    }
+    private function getSeo($array) {
+        $lighthouseResult = $array['lighthouseResult']; 
+        $seo = $lighthouseResult['categories']['seo']['score']; 
+        return $seo;
+    }
     private function fetchDataPagespeed($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
