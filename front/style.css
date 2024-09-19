@@ -822,6 +822,7 @@ a {
 
 .performance-info-block-photo-block img {
     border: 1px solid var(--border-grey);
+    width: 10%;
 }
 
 .performance-info-block-tabs-block {

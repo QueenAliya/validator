@@ -20,7 +20,6 @@ class ApiFetcher {
         $rawArray = [];
         $categories = ['ACCESSIBILITY', 'BEST-PRACTICES', 'SEO', 'BASE'];
         
-        // Формируем URL для различных запросов
         $requests = [
             'desktop' => [
                 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY',
@@ -39,26 +38,22 @@ class ApiFetcher {
             ]
         ];
 
-        // Инициализируем и добавляем запросы к многопоточному хэндлу
         foreach ($requests as $type => $urls) {
             foreach ($urls as $url) {
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36'));
-                $curlHandles[$type][] = $ch; // Храним дескрипторы
+                $curlHandles[$type][] = $ch; 
                 curl_multi_add_handle($multiHandle, $ch);
             }
         }
 
-        // Выполняем все запросы одновременно
         do {
             curl_multi_exec($multiHandle, $active);
             curl_multi_select($multiHandle);
         } while ($active);
 
-
-        // Собираем результаты
         foreach ($curlHandles as $type => $handles) {
             $i = 0;
             foreach ($handles as $ch) {
@@ -93,49 +88,58 @@ class ApiFetcher {
     }
     private function getActualPerfomance($data, $type) {
         $generalArray = [];
-        $loadingExperience = $data[$type . '_ACCESSIBILITY']['loadingExperience']; 
-        $metrics = $loadingExperience['metrics'];
-        $arrayKeys = [
-            'LARGEST_CONTENTFUL_PAINT_MS', 
-            'INTERACTION_TO_NEXT_PAINT',
-            'CUMULATIVE_LAYOUT_SHIFT_SCORE', 
-            'FIRST_CONTENTFUL_PAINT_MS', 
-            'FIRST_INPUT_DELAY_MS',
-            'EXPERIMENTAL_TIME_TO_FIRST_BYTE'
-        ];
-        foreach ($arrayKeys as $key) {
-            if(isset($metrics[$key])) {
-                $generalArray[$key] = $metrics[$key]['percentile'];
+        if(isset($data[$type . '_ACCESSIBILITY']['loadingExperience'])){
+
+            $loadingExperience = $data[$type . '_ACCESSIBILITY']['loadingExperience']; 
+            $metrics = $loadingExperience['metrics'];
+            $arrayKeys = [
+                'LARGEST_CONTENTFUL_PAINT_MS', 
+                'INTERACTION_TO_NEXT_PAINT',
+                'CUMULATIVE_LAYOUT_SHIFT_SCORE', 
+                'FIRST_CONTENTFUL_PAINT_MS', 
+                'FIRST_INPUT_DELAY_MS',
+                'EXPERIMENTAL_TIME_TO_FIRST_BYTE'
+            ];
+            foreach ($arrayKeys as $key) {
+                if(isset($metrics[$key])) {
+                    $generalArray[$key] = $metrics[$key]['percentile'];
+                }
+                else{
+                    $generalArray[$key] = 'no percentile';
+                }
             }
-            else{
-                $generalArray[$key] = 'no percentile';
-            }
+        } else{
+            return null;
         }
         return $generalArray;
     }
     private function getAccessibility($data, $type): mixed {
-        if (isset($data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score'])) {
-            return $data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score'];
+        $accessibility = empty($data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score']) ? null : $data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score'];
+        if (!empty($accessibility)) {
+            return $accessibility;
         }
-        return null; // или любое другое значение по умолчанию
+        return null;
     }
     
     private function getBestPractices($data, $type) {
-        if (isset($data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score'])) {
-            return $data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score'];
+        $best_practices = empty($data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score']) ? null : $data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score'];
+        if (!empty($best_practices)) {
+            return $best_practices;
         }
         return null; 
     }
     
     private function getSeo($data, $type) {
-        if (isset($data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score'])) {
-            return $data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score'];
+        $seo = empty($data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score']) ? null : $data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score'];
+        if (!empty($seo)) {
+            return $seo;
         }
         return null;
     }
     
     private function getPerfomance($data, $type) {
         $generalArray = [];
+        $screenshotThumbnails =[];
         if (isset($data[$type . '_BASE']['lighthouseResult'])) {
             $lighthouseResult = $data[$type . '_BASE']['lighthouseResult']; 
             $audits = $lighthouseResult['audits'];
@@ -165,6 +169,13 @@ class ApiFetcher {
                 $generalArray['final-screenshot'] =  $audits['final-screenshot']['details']['data'];
             } else {
                 $generalArray['final-screenshot'] = 'no final screenshot';
+            }
+            if(isset($audits['screenshot-thumbnails']['details']['items'])){
+                for ($i = 0; $i <= count($audits['screenshot-thumbnails']['details']['items']); $i++) {
+                    $generalArray['screenshot-thumbnails'][$i] = $audits['screenshot-thumbnails']['details']['items'][$i]['data'];
+                }
+            } else{
+                $generalArray['screenshot-thumbnails'] = 'no screenshot-thumbnails screenshot';
             }
         } else {
             return null;

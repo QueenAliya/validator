@@ -31,7 +31,19 @@ require_once 'session.php';
         function roundToSec($number){
             return round(($number/1000), 1);
         }
-
+        function convertToCapured($time){
+            $date = new DateTime($time);
+            $date->setTimezone(new DateTimeZone('Europe/Moscow'));
+            $formattedDate = $date->format('j M Y \г., H:i') . ' GMT+3';
+            $formatter = new IntlDateFormatter(
+                'ru_RU',
+                IntlDateFormatter::LONG,
+                IntlDateFormatter::NONE
+            );
+            $ruMonth = $formatter->format($date);
+            $formattedDate = str_replace($ruMonth, mb_substr($ruMonth, 0, 3, "UTF-8"), $formattedDate);
+            return $formattedDate;
+        }
     ?>
     </div>
     <form id="form" method="POST" action="getPerfomance.php">
@@ -1405,7 +1417,7 @@ require_once 'session.php';
                                     d="M7.3335 1.07136C7.3335 0.637421 7.68527 0.285645 8.11921 0.285645C8.55315 0.285645 8.90492 0.637421 8.90492 1.07136V2.11898C8.90492 2.55292 8.55315 2.90469 8.11921 2.90469C7.68527 2.90469 7.3335 2.55292 7.3335 2.11898V1.07136Z"
                                     fill="black"></path>
                             </svg>
-                            <p>Captured at 6 сент. 2024 г., 14:39 GMT+3</p>
+                            <p>Captured at <?= convertToCapured($data['info']['time'])?></p>
                         </div>
                         <div class="site-perfomance-block-grey-item">
                             <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1490,14 +1502,10 @@ require_once 'session.php';
                     </div>
                     <div class="performance-info-block-photo-wrap">
                         <div class="performance-info-block-photo-block">
-                            <img src="./front/pic/image1.png" alt="">
-                            <img src="./front/pic/image2.png" alt="">
-                            <img src="./front/pic/image3.png" alt="">
-                            <img src="./front/pic/image4.png" alt="">
-                            <img src="./front/pic/image4.png" alt="">
-                            <img src="./front/pic/image4.png" alt="">
-                            <img src="./front/pic/image4.png" alt="">
-                            <img src="./front/pic/image4.png" alt="">
+                            <?
+                            for ($i = 0; $i <= count($data['desktop']['base']['screenshot-thumbnails'])-2; $i++) {?>
+                                <img src="<?=$data['desktop']['base']['screenshot-thumbnails'][$i]?>">
+                            <?}?>
                         </div>
                         <div class="performance-info-block-tabs-block">
                             <p class="performance-info-block-tabs-block-text">Показать аудиты</p>
