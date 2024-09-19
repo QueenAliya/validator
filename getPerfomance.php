@@ -1,6 +1,6 @@
 <?php
-require 'session.php';
-require 'key.php';
+require_once 'session.php';
+require_once 'key.php';
 
 $inputUrl = empty($_POST['link']) ? null : $_POST['link'];
 
@@ -64,36 +64,33 @@ class ApiFetcher {
             foreach ($handles as $ch) {
                 $response = curl_multi_getcontent($ch);
                 $rawArray[$type . '_' . $categories[$i]] = json_decode($response, true);
-                // $test = $this->getProcess($rawArray, $type);
                 if($type=='desktop' || $type=='mobile' ){
+                    $data['info'] = $this->getInfo($rawArray, $type);
                     $data[$type]['getActualPerfomance'] = $this->getActualPerfomance($rawArray, $type);
                     $data[$type]['getAccessibility'] = $this->getAccessibility($rawArray, $type);
-                    $data[$type]['best-p'] = $this->getBestPractices($rawArray, $type);
+                    $data[$type]['best-practices'] = $this->getBestPractices($rawArray, $type);
                     $data[$type]['seo'] = $this->getSeo($rawArray, $type);
                     $data[$type]['base'] = $this->getPerfomance($rawArray, $type); 
                 } else{
                     $data['test'] ='test1 https://supermarine.ru';    
                 }
-                
-
                 curl_multi_remove_handle($multiHandle, $ch);
                 curl_close($ch);  
                 $i++;
             }
         }
-
         curl_multi_close($multiHandle);
-         
         return $data;
     }
-    // private function getProcess($rawArray, $type) : mixed {
-    //     $data[$type]['getActualPerfomance'] = $this->getActualPerfomance($rawArray, $type);
-    //     $data[$type]['getAccessibility'] = $this->getAccessibility($rawArray, $type);
-    //     $data[$type]['best-p'] = $this->getBestPractices($rawArray, $type);
-    //     $data[$type]['seo'] = $this->getSeo($rawArray, $type);
-    //     $data[$type]['base'] = $this->getPerfomance($rawArray, $type); 
-    //     return $data;
-    // }
+    private function getInfo($data, $type) {
+        $id = $data[$type . '_ACCESSIBILITY']['id']; 
+        $analysisUTCTimestamp = $data[$type . '_ACCESSIBILITY']['analysisUTCTimestamp']; 
+        $info = [
+            "id" => $id,
+            "time" => $analysisUTCTimestamp
+        ];
+        return $info;
+    }
     private function getActualPerfomance($data, $type) {
         $generalArray = [];
         $loadingExperience = $data[$type . '_ACCESSIBILITY']['loadingExperience']; 
@@ -117,45 +114,61 @@ class ApiFetcher {
         return $generalArray;
     }
     private function getAccessibility($data, $type): mixed {
-        $lighthouseResult = $data[$type . '_ACCESSIBILITY']['lighthouseResult']; 
-        $accessibility = $lighthouseResult['categories']['accessibility']['score']; 
-        return $accessibility;
+        if (isset($data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score'])) {
+            return $data[$type . '_ACCESSIBILITY']['lighthouseResult']['categories']['accessibility']['score'];
+        }
+        return null; // или любое другое значение по умолчанию
     }
-
+    
     private function getBestPractices($data, $type) {
-        $lighthouseResult = $data[$type . '_BEST-PRACTICES']['lighthouseResult']; 
-        $best_practices = $lighthouseResult['categories']['best-practices']['score']; 
-        return $best_practices;
+        if (isset($data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score'])) {
+            return $data[$type . '_BEST-PRACTICES']['lighthouseResult']['categories']['best-practices']['score'];
+        }
+        return null; 
     }
+    
     private function getSeo($data, $type) {
-        $lighthouseResult = $data[$type . '_SEO']['lighthouseResult']; 
-        $seo = $lighthouseResult['categories']['seo']['score']; 
-        return $seo;
+        if (isset($data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score'])) {
+            return $data[$type . '_SEO']['lighthouseResult']['categories']['seo']['score'];
+        }
+        return null;
     }
+    
     private function getPerfomance($data, $type) {
         $generalArray = [];
-        $lighthouseResult =  $data[$type . '_BASE']['lighthouseResult']; 
-        $audits = $lighthouseResult['audits'];
-        $arrayKeys = [
-            'first-contentful-paint', 
-            'largest-contentful-paint',
-            'total-blocking-time', 
-            'cumulative-layout-shift', 
-            'speed-index',
-            'server-response-time',
-        ];
-        foreach ($arrayKeys as $key) {
-            if(isset($audits[$key])) {
-                $generalArray[$key] = $audits[$key]['numericValue'];
+        if (isset($data[$type . '_BASE']['lighthouseResult'])) {
+            $lighthouseResult = $data[$type . '_BASE']['lighthouseResult']; 
+            $audits = $lighthouseResult['audits'];
+            $arrayKeys = [
+                'first-contentful-paint', 
+                'largest-contentful-paint',
+                'total-blocking-time', 
+                'cumulative-layout-shift', 
+                'speed-index',
+                'server-response-time',
+            ];
+            foreach ($arrayKeys as $key) {
+                if (isset($audits[$key])) {
+                    $generalArray[$key] = $audits[$key]['numericValue'];
+                } else {
+                    $generalArray[$key] = 'no numericValue';
+                }
             }
-            else{
-                $generalArray[$key] = 'no numericValue';
+            if(isset($lighthouseResult['categories']['performance']['score'])) {
+                $performance = $lighthouseResult['categories']['performance']['score'];
+                $generalArray['performance'] =  $performance;
+            } else {
+                $generalArray['performance'] = 'no performance score';
             }
+            
+            if (isset($audits['final-screenshot']['details']['data'])) {
+                $generalArray['final-screenshot'] =  $audits['final-screenshot']['details']['data'];
+            } else {
+                $generalArray['final-screenshot'] = 'no final screenshot';
+            }
+        } else {
+            return null;
         }
-        $performance = $lighthouseResult['categories']['performance']['score'];
-        $finalScreenshot = $audits['final-screenshot']['details']['data'];
-        $generalArray['performance'] =  $performance;
-        $generalArray['final-screenshot'] =  $finalScreenshot;
         return $generalArray;
     }
     public function saveDataToFile($data, $filename) {
@@ -163,16 +176,32 @@ class ApiFetcher {
     }
 }
 
+function validUrl($rawUrl){
+    $cleanedUrl = filter_var($rawUrl, FILTER_SANITIZE_URL);
+    if (filter_var($cleanedUrl, FILTER_VALIDATE_URL) === false) {
+        if (preg_match('/^[a-z0-9.-]+\.[a-z]{2,}$/i', $cleanedUrl)) {
+            $cleanedUrl = 'http://' . $cleanedUrl;
+        } else {
+            throw new Exception("Некорректный URL");
+        }
+    }
+    $cleanedUrl = filter_var($cleanedUrl, FILTER_SANITIZE_URL);
+
+    if (filter_var($cleanedUrl, FILTER_VALIDATE_URL) === false) {
+        throw new Exception("URL невалиден: " . $cleanedUrl);
+    }
+    return $cleanedUrl;
+}
 if ($inputUrl) {
     $startTime = microtime(true);
-    $cleanedUrl = filter_var($inputUrl, FILTER_SANITIZE_URL);
+    $url = validUrl($inputUrl);
 
-    $apiFetcher = new ApiFetcher($key, $cleanedUrl);
+    $apiFetcher = new ApiFetcher($key, $url);
     $data = $apiFetcher->getData();
     
     $ses_id = session_id();
     $endTime = microtime(true);
     $executionTime = $endTime - $startTime;
-    file_put_contents('responses/execTime.txt', $executionTime);
     $apiFetcher->saveDataToFile($data, 'responses/' . $ses_id . '.json');
+    file_put_contents('responses/execTime.txt', $executionTime . PHP_EOL, FILE_APPEND);
 }
