@@ -63,30 +63,19 @@ class ApiFetcher {
             $i = 0;
             foreach ($handles as $ch) {
                 $response = curl_multi_getcontent($ch);
-                $rawArray[$type . '_' . $categories[$i]][] = json_decode($response, true);
+                $rawArray[$type . '_' . $categories[$i]] = json_decode($response, true);
+                // $test = $this->getProcess($rawArray, $type);
+                if($type=='desktop' || $type=='mobile' ){
+                    $data[$type]['getActualPerfomance'] = $this->getActualPerfomance($rawArray, $type);
+                    $data[$type]['getAccessibility'] = $this->getAccessibility($rawArray, $type);
+                    $data[$type]['best-p'] = $this->getBestPractices($rawArray, $type);
+                    $data[$type]['seo'] = $this->getSeo($rawArray, $type);
+                    $data[$type]['base'] = $this->getPerfomance($rawArray, $type); 
+                } else{
+                    $data['test'] ='test1 https://supermarine.ru';    
+                }
                 
-                // if($type=='desktop' && $type=='mobile'){
-                //     foreach($categories as $category){
-                //         switch ($category) {
-                //             case 'ACCESSIBILITY':
-                //                 $data[$type]['getActualPerfomance'] = $this->getActualPerfomance($rawArray);
-                //                 $data[$type]['getAccessibility'] = $this->getAccessibility($rawArray);
-                //                 break;
-                //             case 'BEST-PRACTICES':
-                //                 $data[$type]['best-p'] = $this->getBestPractices($rawArray);
-                //                 break;
-                //             case 'SEO':
-                //                 $data[$type]['seo'] = $this->getSeo($rawArray);
-                //                 break;
-                //             case 'BASE':
-                //                 $data[$type]['base'] = $this->getPerfomance($rawArray);
-                //                 break;
-                //         }
-                //     } 
-                // } else{
-                //     // return $data[$type];
-                // }
-                
+
                 curl_multi_remove_handle($multiHandle, $ch);
                 curl_close($ch);  
                 $i++;
@@ -94,47 +83,20 @@ class ApiFetcher {
         }
 
         curl_multi_close($multiHandle);
-
-        // foreach ($rawArray as $key =>$value){
-        //     // Обработка данных из ответов
-        //     foreach($categories as $category){
-
-        //         switch ($category) {
-        //             case 'ACCESSIBILITY':
-        //                 $data[$key]['getActualPerfomance'] = $this->getActualPerfomance($rawArray);
-        //                 $data[$key]['getAccessibility'] = $this->getAccessibility($rawArray);
-        //                 break;
-        //             case 'BEST-PRACTICES':
-        //                 $data[$key]['best-p'] = $this->getBestPractices($rawArray);
-        //                 break;
-        //             case 'SEO':
-        //                 $data[$key]['seo'] = $this->getSeo($rawArray);
-        //                 break;
-        //             case 'BASE':
-        //                 $data[$key]['base'] = $this->getPerfomance($rawArray);
-        //                 break;
-        //         }
-
-                
-        //     } 
-        // }
-       
-        // $data['1'] = $this->getActualPerfomance($rawArray);
-        // $data['2'] = $this->getAccessibility($rawArray);
-        // $data['3'] = $this->getBestPractices($rawArray);
-        // $data['4'] = $this->getSeo($rawArray);
-        // $data['5'] = $this->getPerfomance($rawArray);  
-        $rawArray = $this->getAccessibility($rawArray);
-        return $rawArray;
+         
+        return $data;
     }
-    // private function processResponses($data) {
-    //     // $data = $this->getActualPerfomance($data);
-    //     $data = $this->getAccessibility($data);
+    // private function getProcess($rawArray, $type) : mixed {
+    //     $data[$type]['getActualPerfomance'] = $this->getActualPerfomance($rawArray, $type);
+    //     $data[$type]['getAccessibility'] = $this->getAccessibility($rawArray, $type);
+    //     $data[$type]['best-p'] = $this->getBestPractices($rawArray, $type);
+    //     $data[$type]['seo'] = $this->getSeo($rawArray, $type);
+    //     $data[$type]['base'] = $this->getPerfomance($rawArray, $type); 
     //     return $data;
     // }
-    private function getActualPerfomance($data) {
+    private function getActualPerfomance($data, $type) {
         $generalArray = [];
-        $loadingExperience = $data['desktop'][0]['loadingExperience']; 
+        $loadingExperience = $data[$type . '_ACCESSIBILITY']['loadingExperience']; 
         $metrics = $loadingExperience['metrics'];
         $arrayKeys = [
             'LARGEST_CONTENTFUL_PAINT_MS', 
@@ -154,25 +116,25 @@ class ApiFetcher {
         }
         return $generalArray;
     }
-    private function getAccessibility($data) {
-        $lighthouseResult = $data[0]['lighthouseResult']; 
+    private function getAccessibility($data, $type): mixed {
+        $lighthouseResult = $data[$type . '_ACCESSIBILITY']['lighthouseResult']; 
         $accessibility = $lighthouseResult['categories']['accessibility']['score']; 
         return $accessibility;
     }
 
-    private function getBestPractices($data) {
-        $lighthouseResult = $data['desktopBEST-PRACTICES']['lighthouseResult']; 
+    private function getBestPractices($data, $type) {
+        $lighthouseResult = $data[$type . '_BEST-PRACTICES']['lighthouseResult']; 
         $best_practices = $lighthouseResult['categories']['best-practices']['score']; 
         return $best_practices;
     }
-    private function getSeo($data) {
-        $lighthouseResult = $data['desktop'][2]['lighthouseResult']; 
+    private function getSeo($data, $type) {
+        $lighthouseResult = $data[$type . '_SEO']['lighthouseResult']; 
         $seo = $lighthouseResult['categories']['seo']['score']; 
         return $seo;
     }
-    private function getPerfomance($data) {
+    private function getPerfomance($data, $type) {
         $generalArray = [];
-        $lighthouseResult =  $data['desktop'][3]['lighthouseResult']; 
+        $lighthouseResult =  $data[$type . '_BASE']['lighthouseResult']; 
         $audits = $lighthouseResult['audits'];
         $arrayKeys = [
             'first-contentful-paint', 
