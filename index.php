@@ -20,41 +20,20 @@ require_once 'session.php';
 <body>
     <div class="response">
     <?php
+
         $ses_id = session_id();
         $json_response_file = 'responses/' . $ses_id. '.json';
         $data = '';
-
         if(file_exists($json_response_file)) {
             $json_response = file_get_contents($json_response_file); 
             $data = json_decode($json_response, true);
         }
-        if ($data) {
-            echo '1 - ' . $data['pagespeed_desktop_Accessibility'] . '<br>';
-            // echo 'id - ' . $data['data']['id'] . '<br>';
-            // echo 'time - ' . $data['data']['time'] . '<br>';
-            // echo 'performance - ' . $data['pagespeed_desktop_Perfomance']['performance'] . '<br>';
-            // echo 'first-contentful-paint - ' . $data['pagespeed_desktop_Perfomance']['first-contentful-paint'] . '<br>';
-            // echo 'largest-contentful-paint - ' . $data['pagespeed_desktop_Perfomance']['largest-contentful-paint'] . '<br>';
-            // echo 'total-blocking-time - ' . $data['pagespeed_desktop_Perfomance']['total-blocking-time'] . '<br>';
-            // echo 'cumulative-layout-shift - ' . $data['pagespeed_desktop_Perfomance']['cumulative-layout-shift'] . '<br>';
-            // echo 'server-response-time - ' . $data['pagespeed_desktop_Perfomance']['server-response-time'] . '<br>';
-            // echo 'speed-index - ' . $data['pagespeed_desktop_Perfomance']['speed-index'] . '<br>';
-            // foreach ($data['w3c_validator']['messages'] as $message) {
-            //     echo "Info: {$message['message']}<br><br>";
-            //     echo "From line {$message['lastLine']}, column {$message['firstColumn']}; to line {$message['lastLine']}, column {$message['lastColumn']}<br><br>";
-            //     echo "Extract: " . htmlspecialchars($message['extract']) . "<br><br>";
-            // }
-        } else {
-            echo 'Отправьте сайт на проверку';
-        }
-        
         function roundToSec($number){
             return round(($number/1000), 1);
         }
 
     ?>
     </div>
-    <!-- action="getPerfomance.php" -->
     <form id="form" method="POST" action="getPerfomance.php">
     <input type="text" name="link" id="link" placeholder="введите url" required>
     <button type="submit">Отправить</button>
@@ -4116,7 +4095,6 @@ require_once 'session.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/front/js.js"></script>
 <script>
-    console.log('console');
     $(document).ready(function() {
     $("#form").submit(function (e) {
         e.preventDefault();
@@ -4136,34 +4114,17 @@ require_once 'session.php';
                 beforeSend: function(data) {
                     $('.response').html('подождите...запрос обрабатывается');
                     console.log('Запрос отправлен');
-                    // setInterval(loadUpdates, 2000);
                 },
                 success: function(data) {
-                    // Выводим полученные данные из getPerfomance.php
                 },
                 complete: function (data) {
-                    // Запускаем опрос обновлений через 2 секунд
                     $('.response').html('Запрос обработан2');
-                    console.log('Запрос обработан2');
-                    // alert(data);
+                    window.location.reload();
                 },
             });
         }
         return false;
     });
-
-    // function loadUpdates() {
-    //     var ses_id = '<?php echo $ses_id; ?>'; // Получаем идентификатор сессии PHP
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "/responses/" + ses_id + '.json',
-    //         dataType: "json",
-    //         success: function(data) {
-    //             console.log('+');
-    //             $('.response').html(data);
-    //         },
-    //     });
-    // }
 });
 
 </script>
