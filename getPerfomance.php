@@ -22,16 +22,16 @@ class ApiFetcher {
         
         $requests = [
             'desktop' => [
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=BEST-PRACTICES',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=SEO',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key,
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=BEST-PRACTICES&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=SEO&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&locale=ru',
             ],
             'mobile' => [
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key  . '&category=ACCESSIBILITY',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key . '&category=BEST-PRACTICES',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key . '&category=SEO',
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key  . '&category=ACCESSIBILITY&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key . '&category=BEST-PRACTICES&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key . '&category=SEO&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key . '&locale=ru'
             ],
             'w3c_validator' => [
                 'https://validator.w3.org/nu/?out=json&doc=' . urlencode($this->url),
@@ -105,7 +105,7 @@ class ApiFetcher {
                     $generalArray[$key] = $metrics[$key]['percentile'];
                 }
                 else{
-                    $generalArray[$key] = 'no percentile';
+                    $generalArray[$key] = null;
                 }
             }
         } else{
@@ -139,10 +139,10 @@ class ApiFetcher {
     
     private function getPerfomance($data, $type) {
         $generalArray = [];
-        $screenshotThumbnails =[];
         if (isset($data[$type . '_BASE']['lighthouseResult'])) {
             $lighthouseResult = $data[$type . '_BASE']['lighthouseResult']; 
             $audits = $lighthouseResult['audits'];
+            //показатели с блока "Выявляйте проблемы с производительностью"
             $arrayKeys = [
                 'first-contentful-paint', 
                 'largest-contentful-paint',
@@ -155,16 +155,33 @@ class ApiFetcher {
                 if (isset($audits[$key])) {
                     $generalArray[$key] = $audits[$key]['numericValue'];
                 } else {
-                    $generalArray[$key] = 'no numericValue';
+                    $generalArray[$key] = null;
                 }
             }
+
+            if(isset($audits)) {
+                $generalArray['audits-diagnostics'] =  $audits;
+            } else {
+                $generalArray['audits-diagnostics'] = null;
+            }
+
+            //общая производительность
             if(isset($lighthouseResult['categories']['performance']['score'])) {
                 $performance = $lighthouseResult['categories']['performance']['score'];
                 $generalArray['performance'] =  $performance;
             } else {
-                $generalArray['performance'] = 'no performance score';
+                $generalArray['performance'] = null;
             }
             
+            //общий скрин
+            if(isset($lighthouseResult['fullPageScreenshot'])) {
+                $screenshot = $lighthouseResult['fullPageScreenshot']['screenshot']['data'];
+                $generalArray['screenshot'] =  $screenshot;
+            } else {
+                $generalArray['screenshot'] = null;
+            }
+            
+            //скрины загрузки 8 шт дб
             if (isset($audits['final-screenshot']['details']['data'])) {
                 $generalArray['final-screenshot'] =  $audits['final-screenshot']['details']['data'];
             } else {
@@ -175,8 +192,9 @@ class ApiFetcher {
                     $generalArray['screenshot-thumbnails'][$i] = $audits['screenshot-thumbnails']['details']['items'][$i]['data'];
                 }
             } else{
-                $generalArray['screenshot-thumbnails'] = 'no screenshot-thumbnails screenshot';
+                $generalArray['screenshot-thumbnails'] = null;
             }
+
         } else {
             return null;
         }

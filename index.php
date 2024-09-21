@@ -29,7 +29,12 @@ require_once 'session.php';
             $data = json_decode($json_response, true);
         }
         function roundToSec($number){
-            return round(($number/1000), 1);
+            if(!$number==null){
+                return round(($number/1000), 1);
+            } else{
+                return null;
+            }
+
         }
         function convertToCapured($time){
             $date = new DateTime($time);
@@ -43,6 +48,12 @@ require_once 'session.php';
             $ruMonth = $formatter->format($date);
             $formattedDate = str_replace($ruMonth, mb_substr($ruMonth, 0, 3, "UTF-8"), $formattedDate);
             return $formattedDate;
+        }
+
+        function pre($arr){
+            echo '<pre>';
+            var_dump(($arr));
+            echo '</pre>';
         }
     ?>
     </div>
@@ -1321,6 +1332,8 @@ require_once 'session.php';
                             </div>
                         </div>
                     </div>
+                    <!-- <img src="<?=$data['desktop']['base']['screenshot']?>"> -->
+                     <!-- Общий сриншот -->
                     <div class="performance-info-block-indicators">
                         <div class="performance-info-block-indicators-title-block">
                             <p class="performance-info-block-indicators-title">Показатели</p>
@@ -1346,6 +1359,7 @@ require_once 'session.php';
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 0L13.0622 10.5H0.937822L7 0Z" fill="#FF5A13" />
                                 </svg>
+                               
                                 <div class="performance-info-block-indicators-item-block">
                                     <p class="performance-info-block-indicators-item-block-text">Largest Contentful Paint
                                     </p>
@@ -1523,6 +1537,19 @@ require_once 'session.php';
                         <div class="performance-info-block-tabs-block-show performance-info-block--js active"
                             data-thumb="performance-tab-1">
                             <h2>диагностика</h2>
+                            <!-- <p><?=$data['desktop']['base']['audits-diagnostics']?></p> -->
+                            <? 
+                            $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
+                            
+                               echo  count($desktop_audits);
+                            foreach ($desktop_audits as $key) {
+                                pre($key['title']);
+                                pre('score = ' .$key['id'] . $key['score']);
+                            }
+
+
+
+                            ?>
                             <div class="performance-info-block-tabs-wrap">
                                 <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
                                     <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
