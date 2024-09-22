@@ -1663,36 +1663,51 @@ require_once 'session.php';
                                                 <div class="performance-info-block-tabs-hidden-block-phase">
                                                     <div class="performance-info-block-tabs-hidden-block-phase-top">
                                                         <div class="performance-info-block-tabs-hidden-block-phase-block">
-                                                            <!-- <?=$item['details']['items'][1]['items'][3]['phase']?> -->
-                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][0]['label'] : "значение тест table";?></p>
-                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][1]['label'] : "значение тест table";?></p>
-                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][2]['label'] : "значение тест table";?></p>
+                                                            <? 
+                                                            $headings = $item['details']['headings'];
+                                                            if($headings){
+                                                            foreach ($headings as $key => $value) {?>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-title">
+                                                                <?=(isset($value['label'])) ? $value['label'] : "null";?>
+                                                                </p>
+                                                            <?}?>
+                                                            <?}?>
                                                         </div>
                                                         <div class="performance-info-block-tabs-hidden-block-phase-block-container">
                                                             <? 
-                                                            $items = $item['details']['items'];
-                                                            foreach ($items as $i){?>
-                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
-                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['entity'])) ? $i['entity'] : "значение entity";?></p>
-                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
-                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
-                                                                </div>
-                                                                
-                                                                <?if(isset($i['subItems'])){
-                                                                $subItems = $i['subItems']['items'];
-                                                                    foreach ($subItems as $subItem){
-                                                                        $arrConvdertedLinks = shortLink($subItem['url']);?>
-                                                                        <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
-                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text">
-                                                                                <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
-                                                                                    <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
-                                                                                </a>
-                                                                                <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
-                                                                            </p>
-                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
-                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
-                                                                        </div>
+                                                            if(isset($item['details']['isEntityGrouped'])){
+                                                                $items = $item['details']['items'];
+                                                                foreach ($items as $i){?>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['entity'])) ? $i['entity'] : "значение entity";?></p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                    </div>
+                                                                    
+                                                                    <?if(isset($i['subItems'])){
+                                                                    $subItems = $i['subItems']['items'];
+                                                                        foreach ($subItems as $subItem){
+                                                                            $arrConvdertedLinks = shortLink($subItem['url']);?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
+                                                                                        <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
+                                                                                    </a>
+                                                                                    <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
+                                                                                </p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                            </div>
+                                                                        <?}?>
                                                                     <?}?>
+                                                                <?}
+                                                            }else{
+                                                                $items = $item['details']['items'];
+                                                                foreach ($items as $i){?>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['groupLabel'])) ? $i['groupLabel']: "значение groupLabel";?></p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['duration'])) ? round($i['duration']) . ' мс': "значение duration";?></p>
+                                                                    </div>
                                                                 <?}?>
                                                             <?}?>
                                                         </div>
