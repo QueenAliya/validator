@@ -49,6 +49,26 @@ require_once 'session.php';
             $formattedDate = str_replace($ruMonth, mb_substr($ruMonth, 0, 3, "UTF-8"), $formattedDate);
             return $formattedDate;
         }
+        function kibToMiB($kib) {
+            return round($kib / 1024, 0);
+        }
+        function shortLink($link) {
+            $parts = explode('/', $link);
+            $domain = $parts[2];
+            if (count($parts) >= 3) {
+                $part = '../' . implode('/', array_slice($parts, 3, 3));
+            } elseif (count($parts) === 2) {
+                 $part = '../' . end($parts);
+            } elseif (count($parts) === 1) {
+                 $part = '../' . $parts[0];
+            } 
+            $convertedLink = (strlen($part) > 45) ? substr($part, 0, 20) . '...' : $part;
+            $result = [
+                'link' => $convertedLink,
+                'domain' => $domain
+            ];
+            return $result;
+        }
 
         function pre($arr){
             echo '<pre>';
@@ -1541,17 +1561,208 @@ require_once 'session.php';
                             <? 
                             $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
                             
-                               echo  count($desktop_audits);
-                            foreach ($desktop_audits as $key) {
-                                pre($key['title']);
-                                pre('score = ' .$key['id'] . $key['score']);
+                            foreach ($desktop_audits as $item) {
+                                pre($item['title']);
+                                pre('score = ' .$item['id'] . $item['score']);
                             }
-
-
 
                             ?>
                             <div class="performance-info-block-tabs-wrap">
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
+                                <?if(isset($desktop_audits)){?>
+
+                                <?foreach ($desktop_audits as $item) {
+                                    if($item['score']==0 && isset($item['displayValue'])){?>
+                                    
+                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
+                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
+                                            <div class="performance-info-block-tabs-open-left">
+                                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
+                                                </svg>
+                                                <p class="performance-info-block-tabs-open-text"><?= (isset($item['title'])) ? $item['title'] : "название аудита";?> | <?=$item['id']?><span
+                                                        class="performance-info-block-tabs-open-text red">-- <?=(isset($item['displayValue'])) ? $item['displayValue'] : "";?></span></p>
+                                            </div>
+                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
+                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
+                                            </svg>
+                                        </div>
+                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
+                                            <div class="performance-info-block-tabs-hidden-block-top">
+                                                <p> <?=(isset($item['description'])) ? $item['description'] : "описание аудита";?></p>
+                                            </div>
+                                            <?if($item['details']['type']=='list'){?>
+                                                <div class="performance-info-block-tabs-hidden-block-elem">
+                                                    <div class="performance-info-block-tabs-hidden-block-elem-block-title">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-title"><?= $item['details']['items'][0]['headings'][0]['label']?></p>
+                                                    </div>
+                                                    <div class="performance-info-block-tabs-hidden-block-elem-block-grey">
+                                                        <!-- <img src="./front/pic/detal-elem.png"> -->
+                                                        <!-- <div class="lh-element-screenshot" data-rect-width="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['width']?>" data-rect-height="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['height']?>" data-rect-left="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['left']?>" data-rect-top="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['top']?>">
+                                                            <div class="lh-element-screenshot__content">
+                                                                <div class="lh-element-screenshot__image" style="background-image:url(<?=$data['desktop']['base']['screenshot']?>); width: 110.25px; height: 100px; background-position: 0px 0px; background-size: 110.25px 758.683px;">
+                                                                    <div class="lh-element-screenshot__mask" style="width: 110.25px; height: 100px; clip-path: url(&quot;#clip-787&quot;);">
+                                                                        <svg height="0" width="0">
+                                                                            <defs>
+                                                                                <clipPath clipPathUnits="objectBoundingBox" id="clip-787">
+                                                                                    <polygon points="0,0 1,0 1,0.33993333333333337 0,0.33993333333333337"></polygon>
+                                                                                    <polygon points="0,0.6600666666666667 1,0.6600666666666667 1,1 0,1"></polygon>
+                                                                                    <polygon points="0,0.33993333333333337 0,0.33993333333333337 0,0.6600666666666667 0,0.6600666666666667"></polygon>
+                                                                                    <polygon points="1,0.33993333333333337 1,0.33993333333333337 1,0.6600666666666667 1,0.6600666666666667"></polygon>
+                                                                                </clipPath>
+                                                                            </defs>
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div class="lh-element-screenshot__element-marker" style="width: 110.25px; height: 32.0133px; left: 0px; top: 33.9933px;"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+
+                                                        <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                            <p><?=$item['details']['items'][0]['items'][0]['node']['nodeLabel']?></p>
+                                                            <pre><?=htmlspecialchars($item['details']['items'][0]['items'][0]['node']['snippet'])?></pre>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase">
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                            <!-- <?=$item['details']['items'][1]['items'][3]['phase']?> -->
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title">Фаза</p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title">% от LCP</p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title">Время</p>
+                                                        </div>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-text">TTFB</p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][0]['percent']?></p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][0]['timing'], 0)?> мс</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка загрузки</p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][1]['percent']?></p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][1]['timing'], 0)?> мс</p>
+                                                    </div>
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">Время загрузки</p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][2]['percent']?></p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][2]['timing'], 0)?> мс</p>
+                                                    </div>
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка отрисовки</p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][3]['percent']?></p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][3]['timing'], 0)?> мс</p>
+                                                    </div>
+                                                </div>
+                                            <?}
+                                            
+                                            elseif($item['details']['type']=='table'){?>
+
+                                                <div class="performance-info-block-tabs-hidden-block-phase">
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                            <!-- <?=$item['details']['items'][1]['items'][3]['phase']?> -->
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][0]['label'] : "значение тест table";?></p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][1]['label'] : "значение тест table";?></p>
+                                                            <p class="performance-info-block-tabs-hidden-block-elem-title"><?=(isset($item['details']['headings'][0]['label'])) ? $item['details']['headings'][2]['label'] : "значение тест table";?></p>
+                                                        </div>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block-container">
+                                                            <? 
+                                                            $items = $item['details']['items'];
+                                                            foreach ($items as $i){?>
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['entity'])) ? $i['entity'] : "значение entity";?></p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                </div>
+                                                                
+                                                                <?if(isset($i['subItems'])){
+                                                                $subItems = $i['subItems']['items'];
+                                                                    foreach ($subItems as $subItem){
+                                                                        $arrConvdertedLinks = shortLink($subItem['url']);?>
+                                                                        <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
+                                                                                    <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
+                                                                                </a>
+                                                                                <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
+                                                                            </p>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                        </div>
+                                                                    <?}?>
+                                                                <?}?>
+                                                            <?}?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            <?}
+                                            
+                                            
+                                            ?>
+                                            <?if($item['details']['type']=='opportunity'){?>
+                                                <p>details->'type' = opportunity</p>
+                                            <?}?>
+                                            <!-- <?if($item['details']['type']=='table'){?>
+                                                <p>details->'type' = table</p>
+                                            <?}?> -->
+
+                                        
+
+
+
+                                            <!-- <div class="performance-info-block-tabs-hidden-block-phase-second">
+                                                <div class="performance-info-block-tabs-hidden-block-phase-top-second">
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-second">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">Категорияcutac</p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
+                                                    </div>
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-second">
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
+                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
+                                                    </div>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
+                                                    
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
+                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                
+                                    <?}
+                                    }?>
+                                
+                                <?}?>
+
+
+                                <!-- красный но с картинками Item навский случай -->
+                                <!-- <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
                                     <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
                                         <div class="performance-info-block-tabs-open-left">
                                             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
@@ -1618,556 +1829,14 @@ require_once 'session.php';
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Сократите время выполнения кода JavaScript <span
-                                                    class="performance-info-block-tabs-open-text red">-- 3,4 сек.</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Минимизируйте работу в основном потоке <span
-                                                    class="performance-info-block-tabs-open-text red">-- 6,1 сек.</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Уменьшите влияние стороннего кода <span
-                                                    class="performance-info-block-tabs-open-text red">-- Сторонний код заблокировал основной поток на 1 340 мс.</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Устраните ресурсы, блокирующие отображение <span
-                                                    class="performance-info-block-tabs-open-text red">-- Потенциальная экономия – 1 860 мс</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Удалите неиспользуемый код CSS <span
-                                                    class="performance-info-block-tabs-open-text red">-- Потенциальная экономия – 116 КиБ</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Сократите размер структуры DOM <span
-                                                    class="performance-info-block-tabs-open-text red">-- 1 153 элемента</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Удалите неиспользуемый код JavaScript <span
-                                                    class="performance-info-block-tabs-open-text red">-- Потенциальная экономия – 250 КиБ</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Уменьшите размер кода JavaScript <span
-                                                    class="performance-info-block-tabs-open-text red">-- Потенциальная экономия – 12 КиБ.</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Отложите загрузку скрытых изображений <span
-                                                    class="performance-info-block-tabs-open-text red">-- Потенциальная экономия – 606 КиБ</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Рекомендуем сократить время на обработку, компиляцию и выполнение скриптов JS. Для этого вы можете разбить код JS на небольшие фрагменты. Подробнее о том,  <a
-                                                    href="javascript:void(0);">как минимизировать работу в основном потоке…</a><button class="performance-info-block-tabs-hidden-button">TBT</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Категория</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div> -->
+
+
+
+
+
+
+                                
                                 <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
                                     <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
                                         <div class="performance-info-block-tabs-open-left">

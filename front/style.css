@@ -987,6 +987,42 @@ a {
    
     
 }
+/* серая маска для картинок в аудитах */
+.lh-element-screenshot{
+    cursor: zoom-in;
+    float: left;
+    margin-right: 20px;
+}
+.lh-element-screenshot__content{
+    overflow: hidden;
+    min-width: 110px;
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+}
+/* .lh-screenshot-overlay--enabled .lh-node .lh-element-screenshot {
+    cursor: zoom-in;
+} */
+.lh-element-screenshot__image {
+    position: relative;
+    background-image: var(--element-screenshot-url);
+    outline: 2px solid #777;
+    background-color: white;
+    background-repeat: no-repeat;
+}
+.lh-element-screenshot__mask {
+    position: absolute;
+    background: #555;
+    opacity: 0.8;
+}
+
+.lh-element-screenshot__element-marker {
+    position: absolute;
+    outline: 2px solid #D3E156;
+}
+
+
+
 
 .performance-info-block-tabs-hidden-block-elem-block-grey-text {
     display: flex;
@@ -1024,7 +1060,10 @@ a {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
-
+.performance-info-block-tabs-hidden-block-phase-block-sub{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
 .performance-info-block-tabs-hidden-block-phase-block-second {
     display: flex;
     justify-content: space-between;
@@ -1060,18 +1099,20 @@ a {
     text-align: right;
 }
 
-.performance-info-block-tabs-hidden-block-elem-text:last-child {
+/* пока что комент */
+/* .performance-info-block-tabs-hidden-block-elem-text:last-child {
    text-align: right;
-}
+} */
 
 .performance-info-block-tabs-hidden-block-phase-block-border:last-child {
     border-bottom: 0;
     padding-bottom: 0;
 }
 
-.performance-info-block-tabs-hidden-block-elem-text:nth-child(2) {
+/* пока что комент */
+/* .performance-info-block-tabs-hidden-block-elem-text:nth-child(2) {
     text-align: center;
-}
+} */
 
 
 .performance-info-block-tabs-hidden-block-phase-block-border {
