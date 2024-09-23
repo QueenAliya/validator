@@ -1,5 +1,6 @@
 <?
 require_once 'session.php';
+require_once 'functions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,60 +22,7 @@ require_once 'session.php';
     <div class="response">
     <?php
 
-        $ses_id = session_id();
-        $json_response_file = 'responses/' . $ses_id. '.json';
-        $data = '';
-        if(file_exists($json_response_file)) {
-            $json_response = file_get_contents($json_response_file); 
-            $data = json_decode($json_response, true);
-        }
-        function roundToSec($number){
-            if(!$number==null){
-                return round(($number/1000), 1);
-            } else{
-                return null;
-            }
-
-        }
-        function convertToCapured($time){
-            $date = new DateTime($time);
-            $date->setTimezone(new DateTimeZone('Europe/Moscow'));
-            $formattedDate = $date->format('j M Y \г., H:i') . ' GMT+3';
-            $formatter = new IntlDateFormatter(
-                'ru_RU',
-                IntlDateFormatter::LONG,
-                IntlDateFormatter::NONE
-            );
-            $ruMonth = $formatter->format($date);
-            $formattedDate = str_replace($ruMonth, mb_substr($ruMonth, 0, 3, "UTF-8"), $formattedDate);
-            return $formattedDate;
-        }
-        function kibToMiB($kib) {
-            return round($kib / 1024, 0);
-        }
-        function shortLink($link) {
-            $parts = explode('/', $link);
-            $domain = $parts[2];
-            if (count($parts) >= 3) {
-                $part = '../' . implode('/', array_slice($parts, 3, 3));
-            } elseif (count($parts) === 2) {
-                 $part = '../' . end($parts);
-            } elseif (count($parts) === 1) {
-                 $part = '../' . $parts[0];
-            } 
-            $convertedLink = (strlen($part) > 45) ? substr($part, 0, 20) . '...' : $part;
-            $result = [
-                'link' => $convertedLink,
-                'domain' => $domain
-            ];
-            return $result;
-        }
-
-        function pre($arr){
-            echo '<pre>';
-            var_dump(($arr));
-            echo '</pre>';
-        }
+        
     ?>
     </div>
     <form id="form" method="POST" action="getPerfomance.php">
@@ -1557,19 +1505,10 @@ require_once 'session.php';
                         <div class="performance-info-block-tabs-block-show performance-info-block--js active"
                             data-thumb="performance-tab-1">
                             <h2>диагностика</h2>
-                            <!-- <p><?=$data['desktop']['base']['audits-diagnostics']?></p> -->
-                            <? 
-                            $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
-                            
-                            foreach ($desktop_audits as $item) {
-                                pre($item['title']);
-                                pre('score = ' .$item['id'] . $item['score']);
-                            }
-
-                            ?>
                             <div class="performance-info-block-tabs-wrap">
-                                <?if(isset($desktop_audits)){?>
-
+                                <?
+                                $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
+                                if(isset($desktop_audits)){?>
                                 <?foreach ($desktop_audits as $item) {
                                     if($item['score']==0 && isset($item['displayValue'])){?>
                                     
@@ -1716,15 +1655,58 @@ require_once 'session.php';
 
 
                                             <?}
-                                            
-                                            
-                                            ?>
-                                            <?if($item['details']['type']=='opportunity'){?>
-                                                <p>details->'type' = opportunity</p>
+
+                                            elseif($item['details']['type']=='opportunity'){?>
+                                                <div class="performance-info-block-tabs-hidden-block-phase">
+                                                    <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                            <? 
+                                                            $headings = $item['details']['headings'];
+                                                            if($headings){
+                                                            foreach ($headings as $key => $value) {?>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-title">
+                                                                <?=(isset($value['label'])) ? $value['label'] : "null";?>
+                                                                </p>
+                                                            <?}?>
+                                                            <?}?>
+                                                        </div>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase-block-container">
+                                                            <? 
+                                                            if(isset($item['details']['items'])){
+                                                                $items = $item['details']['items'];
+                                                                $opportunityDomains = opportunityType($items);
+                                                            pre($opportunityDomains);
+                                                                foreach ($items as $i){?>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                    <?foreach ($opportunityDomains as $domain){
+                                                                        ?>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($domain)) ? $domain : "значение entity";?></p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                        <?}?>
+                                                                    </div>
+                                                                    <?if(isset($i['subItems'])){
+                                                                    $subItems = $i['subItems']['items'];
+                                                                        foreach ($subItems as $subItem){
+                                                                            ?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
+                                                                                        <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
+                                                                                    </a>
+                                                                                    <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
+                                                                                </p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                            </div>
+                                                                        <?}?>
+                                                                    <?}?>
+                                                                <?}
+                                                            }?>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             <?}?>
-                                            <!-- <?if($item['details']['type']=='table'){?>
-                                                <p>details->'type' = table</p>
-                                            <?}?> -->
 
                                         
 
