@@ -1663,11 +1663,13 @@ require_once 'functions.php';
                                                             <? 
                                                             $headings = $item['details']['headings'];
                                                             if($headings){
-                                                            foreach ($headings as $key => $value) {?>
-                                                                <p class="performance-info-block-tabs-hidden-block-elem-title">
-                                                                <?=(isset($value['label'])) ? $value['label'] : "null";?>
-                                                                </p>
-                                                            <?}?>
+                                                                foreach ($headings as $key => $value) {
+                                                                    if(isset($value['label'])){?>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">
+                                                                        <?=$value['label']?>
+                                                                        </p>
+                                                                    <?}?>
+                                                                <?}?>
                                                             <?}?>
                                                         </div>
                                                         <div class="performance-info-block-tabs-hidden-block-phase-block-container">
@@ -1675,7 +1677,7 @@ require_once 'functions.php';
                                                             if(isset($item['details']['items'])){
                                                                 $items = $item['details']['items'];
                                                                 $opportunityDomains = opportunityType($items);
-                                                            pre($opportunityDomains);
+                                                                pre($opportunityDomains);
                                                                 foreach ($items as $i){?>
                                                                     <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
                                                                     <?foreach ($opportunityDomains as $domain){
