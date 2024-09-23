@@ -67,26 +67,27 @@ function pre($arr){
 // }
 function opportunityType($arr) : array {
     $generalArray = [];
-    foreach ($arr as  $arr_key => $arr_value) {
+    $manyItems = [];
+    $oneItem = [];
+    foreach ($arr as $arr_value) {
         $arrConvertedLinks = shortLink($arr_value['url']);
         $opportunityDomains[] = $arrConvertedLinks['domain'];
-        // $opportunityDomains[$key]['totalBytes'] = $value['totalBytes'];
-        // $opportunityDomains[$key]['wastedBytes'] = $value['wastedBytes'];
-    }
-    $counts = array_count_values($opportunityDomains);
-    foreach ($opportunityDomains as $key => $value) {
-        if (isset($counts[$value]) && $counts[$value] > 1) {
-            array_push($generalArray, $arr_value['totalBytes']);
-            // $generalArray[$value] = $arr_value['totalBytes'] . "встречается больше 1 раза.";
-        } else {
-            array_push($generalArray, $arr_value['totalBytes']);
-            // $generalArray[$value] = $arr_value['totalBytes'] . "встречается 1 раз или не встречается вовсе.";
+        $opportunityLinks[] = $arrConvertedLinks['link'];
+        $counts = array_count_values($opportunityDomains);
+        foreach ($opportunityDomains as $key => $value) {
+            if (isset($counts[$value]) && $counts[$value] > 1) {
+                $manyItems[$value][$key]['url'] = $opportunityLinks[$key];
+                $manyItems[$value][$key]['totalBytes'] = $arr[$key]['totalBytes'];
+                $manyItems[$value][$key]['wastedBytes'] = $arr[$key]['wastedBytes'];
+            } else {
+                $oneItem[$value]['url'] = $opportunityLinks[$key];
+                $oneItem[$value]['totalBytes'] = $arr[$key]['totalBytes'];
+                $oneItem[$value]['wastedBytes'] = $arr[$key]['wastedBytes'];
+            }
         }
     }
 
-
-    
-
+    $generalArray = $manyItems + $oneItem;
     // $uniqueDomains = array_unique($opportunityDomains);
     return $generalArray;
 }
