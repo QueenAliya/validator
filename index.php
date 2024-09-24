@@ -1673,38 +1673,44 @@ require_once 'functions.php';
                                                             <?}?>
                                                         </div>
                                                         <div class="performance-info-block-tabs-hidden-block-phase-block-container">
-                                                            <? 
-                                                            if(isset($item['details']['items'])){
-                                                                $items = $item['details']['items'];
-                                                                $opportunityDomains = opportunityType($items);
-                                                                pre($opportunityDomains);
-                                                                foreach ($items as $i){?>
+                                                            <?if(isset($item['details']['items'])){
+                                                            $items = $item['details']['items'];
+                                                            $opportunityDomains = opportunityType($items);
+                                                            // pre($opportunityDomains);
+                                                            foreach ($opportunityDomains as $key => $value){
+                                                                if(count($value)>=2){?>
                                                                     <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
-                                                                    <?foreach ($opportunityDomains as $domain){
-                                                                        ?>
-                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($domain)) ? $domain : "значение entity";?></p>
-                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
-                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                        <?=$key?>
+                                                                    </div>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                        <?foreach ($value as $i) {?>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
+                                                                                    <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
+                                                                                </a>
+                                                                                <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                            </p>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['totalBytes'])) ? kibToMiB($i['totalBytes']) : "значение totalBytes";?>KiB</p>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['wastedBytes'])) ? kibToMiB($i['wastedBytes']) : "значение wastedBytes";?> KiB</p>
                                                                         <?}?>
                                                                     </div>
-                                                                    <?if(isset($i['subItems'])){
-                                                                    $subItems = $i['subItems']['items'];
-                                                                        foreach ($subItems as $subItem){
-                                                                            ?>
-                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
-                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">
-                                                                                    <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
-                                                                                        <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
-                                                                                    </a>
-                                                                                    <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
-                                                                                </p>
-                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
-                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
-                                                                            </div>
-                                                                        <?}?>
-                                                                    <?}?>
                                                                 <?}
-                                                            }?>
+                                                                elseif(count($value)<=1){?>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                        <?=$key?>
+                                                                    </div>
+                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                            <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
+                                                                                <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
+                                                                            </a>
+                                                                            <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                        </p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($value['values']['totalBytes'])) ? kibToMiB($value['values']['totalBytes']) : "значение totalBytes";?>KiB</p>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($value['values']['wastedBytes'])) ? kibToMiB($value['values']['wastedBytes']) : "значение wastedBytes";?> KiB</p>
+                                                                    </div>
+                                                                <?}?> 
+                                                            <?}}?>
                                                         </div>
                                                     </div>
                                                 </div>
