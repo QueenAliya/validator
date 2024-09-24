@@ -1645,9 +1645,27 @@ require_once 'functions.php';
                                                                         $items = $item['details']['items'];
                                                                         foreach ($items as $i){?>
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
-                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['groupLabel'])) ? $i['groupLabel']: "значение groupLabel";?></p>
-                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['duration'])) ? round($i['duration']) . ' мс': "значение duration";?></p>
-                                                                            </div>
+                                                                                <?if(isset($i['groupLabel'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['groupLabel'];?></p>
+                                                                                <?}
+                                                                                if(isset($i['duration'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($i['duration'])?> мс </p>
+                                                                                <?}
+                                                                                if(isset($i['url'])){
+                                                                                $i_url = shortLink($i['url']);
+                                                                                ?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i_url['domain'])) ? $i_url['domain']: "Неотносимый";?></p>
+                                                                                <?}
+                                                                                if(isset($i['scriptParseCompile'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['scriptParseCompile']?></p>
+                                                                                <?}
+                                                                                if(isset($i['total'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['total']?></p>
+                                                                                <?}
+                                                                                if(isset($i['scripting'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['scripting']?></p>
+                                                                                <?}?>
+                                                                          </div>
                                                                         <?}?>
                                                                     <?}?>
                                                                 </div>
@@ -1676,6 +1694,7 @@ require_once 'functions.php';
                                                                 <div class="performance-info-block-tabs-hidden-block-phase-block-container">
                                                                     <?if(isset($item['details']['items'])){
                                                                     $items = $item['details']['items'];
+                                                                    // $jsonUrls = ['url', 'short-url', 'totalBytes', 'wastedBytes'];
                                                                     $opportunityDomains = opportunityType($items);
                                                                     // pre($opportunityDomains);
                                                                     foreach ($opportunityDomains as $key => $value){

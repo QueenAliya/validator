@@ -25,8 +25,8 @@ class ApiFetcher {
                 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=ACCESSIBILITY&locale=ru',
                 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=BEST-PRACTICES&locale=ru',
                 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&category=SEO&locale=ru',
-                // 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key,
-                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&locale=ru',
+                'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key,
+                // 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&key=' . $this->key . '&locale=ru',
             ],
             'mobile' => [
                 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=' . urlencode($this->url) . '&strategy=mobile&key=' . $this->key  . '&category=ACCESSIBILITY&locale=ru',
@@ -234,4 +234,4 @@ if ($inputUrl) {
     $executionTime = $endTime - $startTime;
     $apiFetcher->saveDataToFile($data, 'responses/' . $ses_id . '.json');
     file_put_contents('responses/execTime.txt', $executionTime . PHP_EOL, FILE_APPEND);
-}
+}   
