@@ -66,15 +66,37 @@ function opportunityType($arr) : array {
         $counts = array_count_values($opportunityDomains);
         foreach ($opportunityDomains as $key => $value) {
             if (isset($counts[$value]) && $counts[$value] > 1) {
-                $manyItems[$value][$key]['url'] = $arr[$key]['url'];
-                $manyItems[$value][$key]['short-url'] = $opportunityLinks[$key];
-                $manyItems[$value][$key]['totalBytes'] = $arr[$key]['totalBytes'];
-                $manyItems[$value][$key]['wastedBytes'] = $arr[$key]['wastedBytes'];
+                if (isset($arr[$key]['url'])) {
+                    $manyItems[$value][$key]['url'] = $arr[$key]['url'];
+                }
+                if (isset($opportunityLinks[$key])) {
+                    $manyItems[$value][$key]['short-url'] = $opportunityLinks[$key];
+                }
+                if (isset($arr[$key]['totalBytes'])) {
+                    $manyItems[$value][$key]['totalBytes'] = $arr[$key]['totalBytes'];
+                }
+                if (isset($arr[$key]['wastedBytes'])) {
+                    $manyItems[$value][$key]['wastedBytes'] = $arr[$key]['wastedBytes'];
+                }
+                if (isset($arr[$key]['wastedMs'])) {
+                    $manyItems[$value][$key]['wastedMs'] = $arr[$key]['wastedMs'];
+                } 
             } else {
-                $oneItem[$value]['values']['url'] = $arr[$key]['url'];
-                $oneItem[$value]['values']['short-url'] = $opportunityLinks[$key];
-                $oneItem[$value]['values']['totalBytes'] = $arr[$key]['totalBytes'];
-                $oneItem[$value]['values']['wastedBytes'] = $arr[$key]['wastedBytes'];
+                if (isset($arr[$key]['url'])) {
+                    $oneItem[$value]['values']['url'] = $arr[$key]['url'];
+                }
+                if (isset($opportunityLinks[$key])) {
+                    $oneItem[$value]['values']['short-url'] = $opportunityLinks[$key];
+                }
+                if (isset($arr[$key]['totalBytes'])) {
+                    $oneItem[$value]['values']['totalBytes'] = $arr[$key]['totalBytes'];
+                }
+                if (isset($arr[$key]['wastedBytes'])) {
+                    $oneItem[$value]['values']['wastedBytes'] = $arr[$key]['wastedBytes'];
+                } 
+                if (isset($arr[$key]['wastedMs'])) {
+                    $oneItem[$value]['values']['wastedMs'] = $arr[$key]['wastedMs'];
+                } 
             }
         }
     }

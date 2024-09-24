@@ -1505,6 +1505,7 @@ require_once 'functions.php';
                         <div class="performance-info-block-tabs-block-show performance-info-block--js active"
                             data-thumb="performance-tab-1">
                             <h2>диагностика</h2>
+                            <!-- КРАСНЫЙ БЛОК  -->
                             <div class="performance-info-block-tabs-wrap">
                                 <?
                                 $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
@@ -1706,8 +1707,15 @@ require_once 'functions.php';
                                                                             </a>
                                                                             <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
                                                                         </p>
-                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($value['values']['totalBytes'])) ? kibToMiB($value['values']['totalBytes']) : "значение totalBytes";?>KiB</p>
-                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($value['values']['wastedBytes'])) ? kibToMiB($value['values']['wastedBytes']) : "значение wastedBytes";?> KiB</p>
+                                                                        <?if(isset($value['values']['totalBytes'])){?>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?= kibToMiB($value['values']['totalBytes'])?>KiB</p>
+                                                                        <?}?>
+                                                                        <?if(isset($value['values']['wastedBytes'])){?>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?= kibToMiB($value['values']['wastedBytes'])?>KiB</p>
+                                                                        <?}?>
+                                                                        <?if(isset($value['values']['wastedMs'])){?>
+                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?= $value['values']['wastedMs']?> мс</p>
+                                                                        <?}?>
                                                                     </div>
                                                                 <?}?> 
                                                             <?}}?>
@@ -1715,48 +1723,6 @@ require_once 'functions.php';
                                                     </div>
                                                 </div>
                                             <?}?>
-
-                                        
-
-
-
-                                            <!-- <div class="performance-info-block-tabs-hidden-block-phase-second">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-top-second">
-                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">Категорияcutac</p>
-                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">Потраченное время</p>
-                                                    </div>
-                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-second">
-                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">Script Evaluation</p>
-                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">3 332 мс</p>
-                                                    </div>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Other</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">1 149 мс</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Style & Layout</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">524 мс</p>
-                                                    
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Garbage Collection</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">470 мс</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Rendering</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">256 мс</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Script Parsing & Compilation</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">224 мс</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block-border-second">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Parse HTML & CSS</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">116 мс</p>
-                                                </div>
-                                            </div> -->
                                         </div>
                                     </div>
                                 
@@ -1764,82 +1730,6 @@ require_once 'functions.php';
                                     }?>
                                 
                                 <?}?>
-
-
-                                <!-- красный но с картинками Item навский случай -->
-                                <!-- <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                    <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-open-left">
-                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5 0L9.33013 7.5H0.669873L5 0Z" fill="#FF5A13" />
-                                            </svg>
-                                            <p class="performance-info-block-tabs-open-text">Элемент "Отрисовка самого крупного
-                                                контента" <span
-                                                    class="performance-info-block-tabs-open-text red">-- 31 840 мс</span></p>
-                                        </div>
-                                        <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                    <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                        <div class="performance-info-block-tabs-hidden-block-top">
-                                            <p>Это самый большой элемент контента, отрисованный в области просмотра. <a
-                                                    href="javascript:void(0);">Подробнее об отрисовке самого крупного
-                                                    контента…</a><button class="performance-info-block-tabs-hidden-button">LCP</button></p>
-                                            
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-elem">
-                                            <div class="performance-info-block-tabs-hidden-block-elem-block-title">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-title">Элемент</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-elem-block-grey">
-                                                <img src="./front/pic/detal-elem.png">
-                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
-                                                    <p>Создаем, реализуем и масштабируем стратегии продвижения c учётом
-                                                        юнит-экономики…</p>
-                                                    <pre>&lt;h2&gt; class="h2 wow animate__fadeInUp pb-3 pb-lg-0" style="visibility: visible; animation-name: fadeInUp;">&lt;/h2&gt;</pre>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden-block-phase">
-                                            <div class="performance-info-block-tabs-hidden-block-phase-top">
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Фаза</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">% от LCP</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">600 мс</p>
-                                                </div>
-                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">TTFB</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">2%</p>
-                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">Время</p>
-                                                </div>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка загрузки</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">0%</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">0 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Время загрузки</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">0%</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">0 мс</p>
-                                            </div>
-                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка отрисовки</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">98%</p>
-                                                <p class="performance-info-block-tabs-hidden-block-elem-text">31 240 мс</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-
-
-
-
-
 
                                 
                                 <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
