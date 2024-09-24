@@ -54,6 +54,20 @@ function pre($arr){
     echo '</pre>';
 }
 
+class AssemblingArrayTableType {
+    private $key;
+    private $url;
+
+    public function __construct($key, $url) {
+        $this->key = $key;
+        $this->url = $url;
+    }
+    public function getData() {
+    }
+    private function getActualPerfomance($data, $type) {
+    }
+}
+
 // audit giagnostics -> type = opportunity
 function opportunityType($arr) : array {
     $generalArray = [];
