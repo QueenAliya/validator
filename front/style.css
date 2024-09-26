@@ -596,18 +596,22 @@ input#link{
 .performance-info-small-circle{
     background-color: #ffd6c4;
     color: #ff5a13;
+    cursor: default;
 }
 .performance-special-small-circle{
     background-color: #ffe8bf;
     color: #ffa400;
+    cursor: default;
 }
 .performance-recommendation-small-circle{
     background-color: #dbf8e9;
     color: #0cce6a;
+    cursor: default;
 }
 .performance-seo-small-circle{
     background-color: #dbf8e9;
     color: #0cce6a;
+    cursor: default;
 }
 .performance-info-block-top-left-circle{
     border-radius: 50%;
@@ -621,6 +625,7 @@ input#link{
     align-items: center;
     font-size: 57px;
     font-family: var(--hoves-400);
+    cursor:default;
 }
 
 .performance-info-block-top-left-svg {
