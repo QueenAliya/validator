@@ -1766,7 +1766,6 @@ require_once 'functions.php';
                                         <?}
                                     }?>
 
-
                                     <!-- ЖЕЛТЫЙ БЛОК  -->
                                     <?foreach ($desktop_audits as $item) {
                                         if($item['score']==0.5 && isset($item['displayValue'])){?>
@@ -1897,7 +1896,7 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                             <?}?>
                                                                         <?}
-                                                                    }else{
+                                                                    }elseif(isset($item['details']['items']['groupLabel'])){
                                                                         $items = $item['details']['items'];
                                                                         foreach ($items as $i){?>
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
@@ -1923,7 +1922,70 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                           </div>
                                                                         <?}?>
-                                                                    <?}?>
+                                                                    <?}else{
+                                                                        $items = $item['details']['items'];
+                                                                        $opportunityDomains = opportunityType($items);
+                                                                        foreach ($opportunityDomains as $key => $value){
+                                                                            if(count($value)>=2){?>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                    <?=$key?>
+                                                                                </div>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                    <?
+                                                                                    foreach ($value as $i) {?>
+                                                                                        <div class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                            <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
+                                                                                                <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
+                                                                                            </a>
+                                                                                            <?if(isset($i['node']['selector']) || isset($i['node']['snippet'])){?>
+                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                    <p><?=$i['node']['selector']?></p>
+                                                                                                    <p><?=$i['node']['snippet']?></p>
+                                                                                                </div>
+                                                                                            <?}?>
+                                                                                            <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                        </div>
+                                                                                        <?if(isset($i['totalBytes'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                        <?}
+                                                                                        if(isset($i['wastedBytes'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                        <?}
+                                                                                        if(isset($i['wastedMs'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                        <?}?>
+                                                                                    <?}?>
+                                                                                </div>
+                                                                            <?}
+                                                                            elseif(count($value)<=1){?>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                    <?=$key?>
+                                                                                </div>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                        <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
+                                                                                            <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
+                                                                                        </a>
+                                                                                            <?if(isset($value['values']['node']['selector'])){?>
+                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                    <p><?=$value['values']['node']['selector']?></p>
+                                                                                                    <p><?=$value['values']['selector']?></p>
+                                                                                                </div>
+                                                                                            <?}?>
+                                                                                        <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                    </p>
+                                                                                    <?if(isset($i['totalBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedMs'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                    <?}?>
+                                                                                </div>
+                                                                            <?}?> 
+                                                                        <?}}?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1957,7 +2019,7 @@ require_once 'functions.php';
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
                                                                                 <?
                                                                                 foreach ($value as $i) {?>
-                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <div class="performance-info-block-tabs-hidden-block-elem-text">
                                                                                         <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
                                                                                             <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
                                                                                         </a>
@@ -1968,7 +2030,7 @@ require_once 'functions.php';
                                                                                             </div>
                                                                                         <?}?>
                                                                                         <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
-                                                                                    </p>
+                                                                                    </div>
                                                                                     <?if(isset($i['totalBytes'])){?>
                                                                                         <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
                                                                                     <?}
@@ -2149,7 +2211,7 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                             <?}?>
                                                                         <?}
-                                                                    }else{
+                                                                    }elseif(isset($item['details']['items']['groupLabel'])){
                                                                         $items = $item['details']['items'];
                                                                         foreach ($items as $i){?>
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
@@ -2175,7 +2237,70 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                           </div>
                                                                         <?}?>
-                                                                    <?}?>
+                                                                    <?}else{
+                                                                        $items = $item['details']['items'];
+                                                                        $opportunityDomains = opportunityType($items);
+                                                                        foreach ($opportunityDomains as $key => $value){
+                                                                            if(count($value)>=2){?>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                    <?=$key?>
+                                                                                </div>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                    <?
+                                                                                    foreach ($value as $i) {?>
+                                                                                        <div class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                            <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
+                                                                                                <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
+                                                                                            </a>
+                                                                                            <?if(isset($i['node']['selector']) || isset($i['node']['snippet'])){?>
+                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                    <p><?=$i['node']['selector']?></p>
+                                                                                                    <p><?=$i['node']['snippet']?></p>
+                                                                                                </div>
+                                                                                            <?}?>
+                                                                                            <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                        </div>
+                                                                                        <?if(isset($i['totalBytes'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                        <?}
+                                                                                        if(isset($i['wastedBytes'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                        <?}
+                                                                                        if(isset($i['wastedMs'])){?>
+                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                        <?}?>
+                                                                                    <?}?>
+                                                                                </div>
+                                                                            <?}
+                                                                            elseif(count($value)<=1){?>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                    <?=$key?>
+                                                                                </div>
+                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                        <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
+                                                                                            <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
+                                                                                        </a>
+                                                                                            <?if(isset($value['values']['node']['selector'])){?>
+                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                    <p><?=$value['values']['node']['selector']?></p>
+                                                                                                    <p><?=$value['values']['selector']?></p>
+                                                                                                </div>
+                                                                                            <?}?>
+                                                                                        <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                    </p>
+                                                                                    <?if(isset($i['totalBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedMs'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                    <?}?>
+                                                                                </div>
+                                                                            <?}?> 
+                                                                        <?}}?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2209,20 +2334,18 @@ require_once 'functions.php';
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
                                                                                 <?
                                                                                 foreach ($value as $i) {?>
-                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <div class="performance-info-block-tabs-hidden-block-elem-text">
                                                                                         <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
                                                                                             <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
                                                                                         </a>
-                                                                                        <!-- <?if(isset($i['node']['selector'])){?>
+                                                                                        <?if(isset($i['node']['selector']) || isset($i['node']['snippet'])){?>
                                                                                             <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
                                                                                                 <p><?=$i['node']['selector']?></p>
-                                                                                                <?if(isset($i['node']['snippet'])){?>
-                                                                                                    <p><?=$i['node']['snippet']?></p>
-                                                                                                <?}?>
+                                                                                                <p><?=$i['node']['snippet']?></p>
                                                                                             </div>
-                                                                                        <?}?> -->
+                                                                                        <?}?>
                                                                                         <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
-                                                                                    </p>
+                                                                                    </div>
                                                                                     <?if(isset($i['totalBytes'])){?>
                                                                                         <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
                                                                                     <?}
@@ -2244,14 +2367,12 @@ require_once 'functions.php';
                                                                                     <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
                                                                                         <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
                                                                                     </a>
-                                                                                        <!-- <?if(isset($value['values']['node']['selector'])){?>
+                                                                                        <?if(isset($value['values']['node']['selector'])){?>
                                                                                             <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
                                                                                                 <p><?=$value['values']['node']['selector']?></p>
-                                                                                                <?if(isset($value['values']['node']['snippet'])){?>
-                                                                                                    <p><?=$value['values']['node']['snippet']?></p>
-                                                                                                <?}?>
+                                                                                                <p><?=$value['values']['selector']?></p>
                                                                                             </div>
-                                                                                        <?}?> -->
+                                                                                        <?}?>
                                                                                     <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
                                                                                 </p>
                                                                                 <?if(isset($i['totalBytes'])){?>
@@ -2274,11 +2395,8 @@ require_once 'functions.php';
                                             </div>
                                         <?}
                                     }?>
-
                                 <?}?>
 
-                                
-                                
                             </div>
                         </div>
                         <div class="performance-info-block-tabs-block-show performance-info-block--js"
