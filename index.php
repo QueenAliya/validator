@@ -88,7 +88,7 @@ require_once 'functions.php';
                 </svg>
             </div>
         </div>
-        
+
     <div class="mobile active">
         <section class="site-perfomance">
             <div class="container">
@@ -3490,9 +3490,6 @@ require_once 'functions.php';
     </div>
 
 
-
-
-
     <div class="desktop">
         <section class="site-perfomance">
             <div class="container">
@@ -5452,7 +5449,7 @@ require_once 'functions.php';
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="special-features">
+                    <div class="special-features">
                         <div class="special-features-wrap">
                             <div class="special-features-wrap-block">
                                 <div class="site-perfomance-circle-block">
@@ -6322,7 +6319,7 @@ require_once 'functions.php';
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </section>
         </div>
