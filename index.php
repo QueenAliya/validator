@@ -1766,6 +1766,7 @@ require_once 'functions.php';
                                         <?}
                                     }?>
 
+
                                     <!-- ЖЕЛТЫЙ БЛОК  -->
                                     <?foreach ($desktop_audits as $item) {
                                         if($item['score']==0.5 && isset($item['displayValue'])){?>
@@ -1922,7 +1923,7 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                           </div>
                                                                         <?}?>
-                                                                    <?}else{
+                                                                    <?}elseif(isset($item['details']['items']['groupLabel']['items']['totalBytes'])){
                                                                         $items = $item['details']['items'];
                                                                         $opportunityDomains = opportunityType($items);
                                                                         foreach ($opportunityDomains as $key => $value){
@@ -2211,7 +2212,7 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                             <?}?>
                                                                         <?}
-                                                                    }elseif(isset($item['details']['items']['groupLabel'])){
+                                                                    }else{
                                                                         $items = $item['details']['items'];
                                                                         foreach ($items as $i){?>
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
@@ -2237,70 +2238,7 @@ require_once 'functions.php';
                                                                                 <?}?>
                                                                           </div>
                                                                         <?}?>
-                                                                    <?}else{
-                                                                        $items = $item['details']['items'];
-                                                                        $opportunityDomains = opportunityType($items);
-                                                                        foreach ($opportunityDomains as $key => $value){
-                                                                            if(count($value)>=2){?>
-                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
-                                                                                    <?=$key?>
-                                                                                </div>
-                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
-                                                                                    <?
-                                                                                    foreach ($value as $i) {?>
-                                                                                        <div class="performance-info-block-tabs-hidden-block-elem-text">
-                                                                                            <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
-                                                                                                <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
-                                                                                            </a>
-                                                                                            <?if(isset($i['node']['selector']) || isset($i['node']['snippet'])){?>
-                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
-                                                                                                    <p><?=$i['node']['selector']?></p>
-                                                                                                    <p><?=$i['node']['snippet']?></p>
-                                                                                                </div>
-                                                                                            <?}?>
-                                                                                            <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
-                                                                                        </div>
-                                                                                        <?if(isset($i['totalBytes'])){?>
-                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
-                                                                                        <?}
-                                                                                        if(isset($i['wastedBytes'])){?>
-                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
-                                                                                        <?}
-                                                                                        if(isset($i['wastedMs'])){?>
-                                                                                            <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
-                                                                                        <?}?>
-                                                                                    <?}?>
-                                                                                </div>
-                                                                            <?}
-                                                                            elseif(count($value)<=1){?>
-                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
-                                                                                    <?=$key?>
-                                                                                </div>
-                                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
-                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
-                                                                                        <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
-                                                                                            <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
-                                                                                        </a>
-                                                                                            <?if(isset($value['values']['node']['selector'])){?>
-                                                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
-                                                                                                    <p><?=$value['values']['node']['selector']?></p>
-                                                                                                    <p><?=$value['values']['selector']?></p>
-                                                                                                </div>
-                                                                                            <?}?>
-                                                                                        <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
-                                                                                    </p>
-                                                                                    <?if(isset($i['totalBytes'])){?>
-                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
-                                                                                    <?}
-                                                                                    if(isset($i['wastedBytes'])){?>
-                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
-                                                                                    <?}
-                                                                                    if(isset($i['wastedMs'])){?>
-                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
-                                                                                    <?}?>
-                                                                                </div>
-                                                                            <?}?> 
-                                                                        <?}}?>
+                                                                    <?}?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2334,18 +2272,20 @@ require_once 'functions.php';
                                                                             <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
                                                                                 <?
                                                                                 foreach ($value as $i) {?>
-                                                                                    <div class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
                                                                                         <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
                                                                                             <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
                                                                                         </a>
-                                                                                        <?if(isset($i['node']['selector']) || isset($i['node']['snippet'])){?>
+                                                                                        <!-- <?if(isset($i['node']['selector'])){?>
                                                                                             <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
                                                                                                 <p><?=$i['node']['selector']?></p>
-                                                                                                <p><?=$i['node']['snippet']?></p>
+                                                                                                <?if(isset($i['node']['snippet'])){?>
+                                                                                                    <p><?=$i['node']['snippet']?></p>
+                                                                                                <?}?>
                                                                                             </div>
-                                                                                        <?}?>
+                                                                                        <?}?> -->
                                                                                         <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
-                                                                                    </div>
+                                                                                    </p>
                                                                                     <?if(isset($i['totalBytes'])){?>
                                                                                         <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
                                                                                     <?}
@@ -2367,12 +2307,14 @@ require_once 'functions.php';
                                                                                     <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
                                                                                         <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
                                                                                     </a>
-                                                                                        <?if(isset($value['values']['node']['selector'])){?>
+                                                                                        <!-- <?if(isset($value['values']['node']['selector'])){?>
                                                                                             <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
                                                                                                 <p><?=$value['values']['node']['selector']?></p>
-                                                                                                <p><?=$value['values']['selector']?></p>
+                                                                                                <?if(isset($value['values']['node']['snippet'])){?>
+                                                                                                    <p><?=$value['values']['node']['snippet']?></p>
+                                                                                                <?}?>
                                                                                             </div>
-                                                                                        <?}?>
+                                                                                        <?}?> -->
                                                                                     <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
                                                                                 </p>
                                                                                 <?if(isset($i['totalBytes'])){?>
@@ -2395,8 +2337,11 @@ require_once 'functions.php';
                                             </div>
                                         <?}
                                     }?>
+
                                 <?}?>
 
+                                
+                                
                             </div>
                         </div>
                         <div class="performance-info-block-tabs-block-show performance-info-block--js"
@@ -2412,292 +2357,265 @@ require_once 'functions.php';
                             </div>
                             <div class="successful-audits-hidden-tabs-wrap">
                                 <div class="successful-audits-hidden-tabs">
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Включите сжатие текста</p>
+                                    <? $desktop_audits = $data['desktop']['base']['audits-diagnostics'];
+                                if(isset($desktop_audits)){?>
+                                    <!-- ЗЕЛЕНЫЙ БЛОК  -->
+                                    <?foreach ($desktop_audits as $item) {
+                                        if($item['score']==null && isset($item['displayValue'])){?>
+                                        
+                                            <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
+                                                <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
+                                                    <div class="performance-info-block-tabs-open-left">
+                                                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
+                                                    </svg>
+                                                        <p class="performance-info-block-tabs-open-text"><?= (isset($item['title'])) ? $item['title'] : "название аудита";?> | <?=$item['id']?>
+                                                        <span class="performance-info-block-tabs-open-text red">-- <?=(isset($item['displayValue'])) ? $item['displayValue'] : "";?></span></p>
+                                                    </div>
+                                                    <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
+                                                            stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
+                                                    </svg>
+                                                </div>
+                                                <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
+                                                    <div class="performance-info-block-tabs-hidden-block-top">
+                                                        <p> <?=(isset($item['description'])) ? $item['description'] : "описание аудита";?></p>
+                                                    </div>
+                                                    <?if($item['details']['type']=='list'){?>
+                                                        <div class="performance-info-block-tabs-hidden-block-elem">
+                                                            <div class="performance-info-block-tabs-hidden-block-elem-block-title">
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-title"><?= $item['details']['items'][0]['headings'][0]['label']?></p>
+                                                            </div>
+                                                            <div class="performance-info-block-tabs-hidden-block-elem-block-grey">
+                                                                <!-- <img src="./front/pic/detal-elem.png"> -->
+                                                                <!-- <div class="lh-element-screenshot" data-rect-width="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['width']?>" data-rect-height="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['height']?>" data-rect-left="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['left']?>" data-rect-top="<?=$item['details']['items'][0]['items'][0]['node']['boundingRect']['top']?>">
+                                                                    <div class="lh-element-screenshot__content">
+                                                                        <div class="lh-element-screenshot__image" style="background-image:url(<?=$data['desktop']['base']['screenshot']?>); width: 110.25px; height: 100px; background-position: 0px 0px; background-size: 110.25px 758.683px;">
+                                                                            <div class="lh-element-screenshot__mask" style="width: 110.25px; height: 100px; clip-path: url(&quot;#clip-787&quot;);">
+                                                                                <svg height="0" width="0">
+                                                                                    <defs>
+                                                                                        <clipPath clipPathUnits="objectBoundingBox" id="clip-787">
+                                                                                            <polygon points="0,0 1,0 1,0.33993333333333337 0,0.33993333333333337"></polygon>
+                                                                                            <polygon points="0,0.6600666666666667 1,0.6600666666666667 1,1 0,1"></polygon>
+                                                                                            <polygon points="0,0.33993333333333337 0,0.33993333333333337 0,0.6600666666666667 0,0.6600666666666667"></polygon>
+                                                                                            <polygon points="1,0.33993333333333337 1,0.33993333333333337 1,0.6600666666666667 1,0.6600666666666667"></polygon>
+                                                                                        </clipPath>
+                                                                                    </defs>
+                                                                                </svg>
+                                                                            </div>
+                                                                            <div class="lh-element-screenshot__element-marker" style="width: 110.25px; height: 32.0133px; left: 0px; top: 33.9933px;"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+
+                                                                <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                    <p><?=$item['details']['items'][0]['items'][0]['node']['nodeLabel']?></p>
+                                                                    <pre><?=htmlspecialchars($item['details']['items'][0]['items'][0]['node']['snippet'])?></pre>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase">
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                                    <!-- <?=$item['details']['items'][1]['items'][3]['phase']?> -->
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Фаза</p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">% от LCP</p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-title">Время</p>
+                                                                </div>
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">TTFB</p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][0]['percent']?></p>
+                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][0]['timing'], 0)?> мс</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка загрузки</p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][1]['percent']?></p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][1]['timing'], 0)?> мс</p>
+                                                            </div>
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Время загрузки</p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][2]['percent']?></p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][2]['timing'], 0)?> мс</p>
+                                                            </div>
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-border">
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">Задержка отрисовки</p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$item['details']['items'][1]['items'][3]['percent']?></p>
+                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($item['details']['items'][1]['items'][3]['timing'], 0)?> мс</p>
+                                                            </div>
+                                                        </div>
+                                                    <?}
+                                                    
+                                                    elseif($item['details']['type']=='table'){?>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase">
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                                    <? 
+                                                                    $headings = $item['details']['headings'];
+                                                                    if($headings){
+                                                                    foreach ($headings as $key => $value) {?>
+                                                                        <p class="performance-info-block-tabs-hidden-block-elem-title">
+                                                                        <?=(isset($value['label'])) ? $value['label'] : "null";?>
+                                                                        </p>
+                                                                    <?}?>
+                                                                    <?}?>
+                                                                </div>
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-container">
+                                                                    <? 
+                                                                    if(isset($item['details']['isEntityGrouped'])){
+                                                                        $items = $item['details']['items'];
+                                                                        foreach ($items as $i){?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['entity'])) ? $i['entity'] : "значение entity";?></p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['transferSize'])) ? kibToMiB($i['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i['blockingTime'])) ? round($i['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                            </div>
+                                                                            
+                                                                            <?if(isset($i['subItems'])){
+                                                                            $subItems = $i['subItems']['items'];
+                                                                                foreach ($subItems as $subItem){
+                                                                                    $arrConvdertedLinks = shortLink($subItem['url']);?>
+                                                                                    <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                            <a href="<?=(isset($subItem['url'])) ? $subItem['url']: "#";?>" target="_blank">
+                                                                                                <?=(isset($subItem['url'])) ? $arrConvdertedLinks['link']: "пустое значение";?>
+                                                                                            </a>
+                                                                                            <span style="color: #00000063;font-size: 13px;">(<?=(isset($subItem['url'])) ? $arrConvdertedLinks['domain']: "пустое значение";?>)</span>
+                                                                                        </p>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['transferSize'])) ? kibToMiB($subItem['transferSize']) : "значение transferSize";?>KiB</p>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($subItem['blockingTime'])) ? round($subItem['blockingTime']) : "значение blockingTime";?> мс</p>
+                                                                                    </div>
+                                                                                <?}?>
+                                                                            <?}?>
+                                                                        <?}
+                                                                    }else{
+                                                                        $items = $item['details']['items'];
+                                                                        foreach ($items as $i){?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                <?if(isset($i['groupLabel'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['groupLabel'];?></p>
+                                                                                <?}
+                                                                                if(isset($i['duration'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=round($i['duration'])?> мс </p>
+                                                                                <?}
+                                                                                if(isset($i['url'])){
+                                                                                $i_url = shortLink($i['url']);
+                                                                                ?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=(isset($i_url['domain'])) ? $i_url['domain']: "Неотносимый";?></p>
+                                                                                <?}
+                                                                                if(isset($i['scriptParseCompile'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['scriptParseCompile']?></p>
+                                                                                <?}
+                                                                                if(isset($i['total'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['total']?></p>
+                                                                                <?}
+                                                                                if(isset($i['scripting'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['scripting']?></p>
+                                                                                <?}?>
+                                                                          </div>
+                                                                        <?}?>
+                                                                    <?}?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?}
+                                                    elseif($item['details']['type']=='opportunity'){?>
+                                                        <div class="performance-info-block-tabs-hidden-block-phase">
+                                                            <div class="performance-info-block-tabs-hidden-block-phase-top">
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block">
+                                                                    <? 
+                                                                    $headings = $item['details']['headings'];
+                                                                    if($headings){
+                                                                        foreach ($headings as $key => $value) {
+                                                                            if(isset($value['label'])){?>
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-title">
+                                                                                <?=$value['label']?>
+                                                                                </p>
+                                                                            <?}?>
+                                                                        <?}?>
+                                                                    <?}?>
+                                                                </div>
+                                                                <div class="performance-info-block-tabs-hidden-block-phase-block-container">
+                                                                    <?if(isset($item['details']['items'])){
+                                                                    $items = $item['details']['items'];
+                                                                    $opportunityDomains = opportunityType($items);
+                                                                    // pre($opportunityDomains);
+                                                                    foreach ($opportunityDomains as $key => $value){
+                                                                        if(count($value)>=2){?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                <?=$key?>
+                                                                            </div>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                <?
+                                                                                foreach ($value as $i) {?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                        <a href="<?=(isset($i['url'])) ? $i['url']: "#";?>" target="_blank">
+                                                                                            <?=(isset($i['short-url'])) ? $i['short-url']: "пустое значение";?>
+                                                                                        </a>
+                                                                                        <!-- <?if(isset($i['node']['selector'])){?>
+                                                                                            <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                <p><?=$i['node']['selector']?></p>
+                                                                                                <?if(isset($i['node']['snippet'])){?>
+                                                                                                    <p><?=$i['node']['snippet']?></p>
+                                                                                                <?}?>
+                                                                                            </div>
+                                                                                        <?}?> -->
+                                                                                        <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                    </p>
+                                                                                    <?if(isset($i['totalBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedBytes'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                    <?}
+                                                                                    if(isset($i['wastedMs'])){?>
+                                                                                        <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                    <?}?>
+                                                                                <?}?>
+                                                                            </div>
+                                                                        <?}
+                                                                        elseif(count($value)<=1){?>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block" style="margin:10px 0;padding: 5px;background:#6161612e">
+                                                                                <?=$key?>
+                                                                            </div>
+                                                                            <div class="performance-info-block-tabs-hidden-block-phase-block-sub" style="padding-left: 10px;background:#fff">
+                                                                                <p class="performance-info-block-tabs-hidden-block-elem-text">
+                                                                                    <a href="<?=(isset($value['values']['url'])) ? $value['values']['url']: "#";?>" target="_blank">
+                                                                                        <?=(isset($value['values']['short-url'])) ? $value['values']['short-url']: "пустое значение";?>
+                                                                                    </a>
+                                                                                        <!-- <?if(isset($value['values']['node']['selector'])){?>
+                                                                                            <div class="performance-info-block-tabs-hidden-block-elem-block-grey-text">
+                                                                                                <p><?=$value['values']['node']['selector']?></p>
+                                                                                                <?if(isset($value['values']['node']['snippet'])){?>
+                                                                                                    <p><?=$value['values']['node']['snippet']?></p>
+                                                                                                <?}?>
+                                                                                            </div>
+                                                                                        <?}?> -->
+                                                                                    <span style="color: #00000063;font-size: 13px;">(<?=$key?>)</span>
+                                                                                </p>
+                                                                                <?if(isset($i['totalBytes'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=$i['totalBytes']?>KiB</p>
+                                                                                <?}
+                                                                                if(isset($i['wastedBytes'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedBytes'])?> KiB</p>
+                                                                                <?}
+                                                                                if(isset($i['wastedMs'])){?>
+                                                                                    <p class="performance-info-block-tabs-hidden-block-elem-text"><?=kibToMiB($i['wastedMs'])?> мс</p>
+                                                                                <?}?>
+                                                                            </div>
+                                                                        <?}?> 
+                                                                    <?}}?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?}?>
+                                                </div>
                                             </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Избегайте большого количества переадресаций</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Используйте видеоформаты для анимированного контента</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Удалите повторяющиеся модули из пакетов JavaScript</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Используйте предварительное подключение к необходимым доменам</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect y="4.43945" width="6.27817" height="6.27817" transform="rotate(-45 0 4.43945)" fill="#D9D9D9"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Предзагрузите изображение для элемента "Отрисовка самого крупного контента"</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Показ всего текста во время загрузки веб-шрифтов</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect y="4.43945" width="6.27817" height="6.27817" transform="rotate(-45 0 4.43945)" fill="#D9D9D9"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Фасадные объекты сторонних ресурсов для отложенной загрузки</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect y="4.43945" width="6.27817" height="6.27817" transform="rotate(-45 0 4.43945)" fill="#D9D9D9"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Изображение, которое отображается при отрисовке самого крупного контента, загружено без задержки</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Пассивные прослушиватели событий используются для улучшения производительности при прокрутке</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Метод <span class="performance-info-block-tabs-open-text blue"> document.write()</span> не используется</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect y="4.43945" width="6.27817" height="6.27817" transform="rotate(-45 0 4.43945)" fill="#D9D9D9"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Избегайте некомбинированных анимаций</p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="performance-info-block-tabs-open-wrap parameter-wrap--js">
-                                        <div class="performance-info-block-tabs-open tabs-open--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-open-left">
-                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="4" cy="4" r="4" fill="#0CCE6A"/>
-                                                </svg>
-                                                <p class="performance-info-block-tabs-open-text">Присутствует метатег <span class="performance-info-block-tabs-open-text blue"><pre class="performance-info-block-tabs-open-text blue">&lt;meta name="viewport"&gt;</pre></span> со свойством <span class="performance-info-block-tabs-open-text blue">width</span>  или   <span class="performance-info-block-tabs-open-text blue">initial-scale</span></p>
-                                            </div>
-                                            <svg class="performance-info-block-tabs-open-svg-rotate" viewBox="0 0 10 6" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 1L4.64645 4.64645C4.84171 4.84171 5.15829 4.84171 5.35355 4.64645L9 1"
-                                                    stroke="#919191" stroke-width="1.5" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                        <div class="performance-info-block-tabs-hidden parameter-block--js" data-thumb="open-tab1">
-                                            <div class="performance-info-block-tabs-hidden-block-top">
-                                                <p>Чтобы уменьшить расход сетевого трафика, рекомендуем сжимать текстовые ресурсы (используйте gzip, deflate или brotli).  <a
-                                                        href="javascript:void(0);">Подробнее о сжатии текста… </a><button class="performance-info-block-tabs-hidden-button">LCP</button> <button class="performance-info-block-tabs-hidden-button">FCP</button></p>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <?}
+                                    }?>
+
+                                <?}?>
                                 </div>
                             </div>
                         </div>
