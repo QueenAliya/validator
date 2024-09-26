@@ -11,6 +11,29 @@ const hiddenAuditsThird = document.querySelector('.successful-audits-hidden-tabs
 const OpenAuditsFour = document.querySelector('#successful-audits-open-four');
 const hiddenAuditsFour = document.querySelector('.successful-audits-hidden-tabs-four')
 
+
+const mobile_swith_button = document.querySelector('.mobile-swith-btn');
+const desktop_swith_button = document.querySelector('.desktop-swith-btn');
+const mobile_page = document.querySelector('.mobile');
+const desktop_page = document.querySelector('.desktop');
+
+mobile_swith_button.addEventListener('click', () =>{
+    desktop_swith_button.classList.remove('active');
+    mobile_swith_button.classList.add('active');
+    desktop_page.classList.remove('active');
+    mobile_page.classList.add('active');
+});
+desktop_swith_button.addEventListener('click', () =>{
+  mobile_swith_button.classList.remove('active');
+  desktop_swith_button.classList.add('active');
+  desktop_page.classList.add('active');
+  mobile_page.classList.remove('active');
+})
+
+
+
+
+
 firstMenu.addEventListener("click", function() {
   this.classList.add("active");
   if(this.classList.contains('active')) {

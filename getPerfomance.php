@@ -68,8 +68,8 @@ class ApiFetcher {
                     $data[$type]['seo'] = $this->getSeo($rawArray, $type);
                     $data[$type]['base'] = $this->getPerfomance($rawArray, $type); 
                 } else{
-                    $data['test'] ='test1 https://supermarine.ru';    
-                }
+                    $data[$type] = $this->fetchDataW3($rawArray, $type);
+                } 
                 curl_multi_remove_handle($multiHandle, $ch);
                 curl_close($ch);  
                 $i++;
@@ -200,6 +200,13 @@ class ApiFetcher {
             return null;
         }
         return $generalArray;
+    }
+    private function fetchDataW3($data, $type) {
+        $w3 = empty($data['w3c_validator_ACCESSIBILITY']) ? null : $data['w3c_validator_ACCESSIBILITY'];
+        if (!empty($w3)) {
+            return $w3;
+        }
+        return null;
     }
     public function saveDataToFile($data, $filename) {
         file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
