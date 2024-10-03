@@ -75,7 +75,9 @@ button {
     outline: none;
     background: none;
 }
-
+.submit{
+    margin-left: 10px;
+}
 .container {
     max-width: 89rem;
     margin: 0 auto;
@@ -116,6 +118,37 @@ input#link{
 .desktop.active{
     display: block;
 }
+.send-response{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.send-block{
+    width: 500px;
+    height: 200px;
+    border: 1px solid #5555559d;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.sumitting{
+    width: 500px;
+    height: 200px;
+    border: 1px solid #5555559d;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    position: relative;
+    color: black;
+}
+
 
 .reports-top {
     margin-bottom: 8.75rem;
